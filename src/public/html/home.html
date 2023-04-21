@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="../images/4.png">
+  <title>SeShare API deploy by caonhan</title>
+</head>
+
+<body>
+  <div class="fullscreen nopadding">
+    <div id="header">
+      <img src="../images/3.png" width="60px" />
+      <ul>
+        <li>Documents</li>
+      </ul>
+    </div>
+    <div class="header">
+      <h1>SeShare API documents</h1>
+    </div>
+  </div>
+
+  <div class="white nopadding more">
+    <a id="more">&#x25BC; More &#x25BC;</a>
+  </div>
+  <div class="white">
+    <a id="test"></a>
+    <h1> Tổng quát </h1>
+    <img class="floatleft" src="../images/jslogo.png" style="width: 50px" />
+    <h1>Root URL sẽ là <a
+        href="https://seshare-api-production.up.railway.app/api">https://api-seshare-production.up.railway.app/api</a>
+      nha, copy
+      ik</h1>
+    <h4>Response Model: status, message</h4>
+    <h4>Response status: (200) OK, (404) Không tìm thấy trong database, (503) Server Error</h4>
+    <p></p>
+    <ul><strong>User authentication</strong>
+      <pre>
+
+      <li>[POST]Sign up: <code>/user/sign-up</code>
+        <ul style="display:block;height:30px;"><strong>headers:</strong>
+          <li><code>"Content-Type":"application/json"</code></li>
+        </ul>
+        <ul><strong>data:</strong>
+          <li><code>phone!:string</code></li>
+          <li><code>password!:string</code></li>
+          <li><code>full_name!:string</code></li>
+          <li><code>age?:Date</code></li>
+          <li><code>gender?:String["Male", "Female", "Other"], default: "Other"</code></li>
+          <li><code>place?:String</code></li>
+          <li><code>avatar_path?:null</code></li>
+          <li><code>bio?:string</code></li>
+          <li><code>study_info?:string</code></li>
+          <li><code>work_info?:string</code></li>
+          <li><code>photos?:photo[]</code></li>
+          <li><code>friends?:friends[]</code></li>
+          <li><code>status?:status</code></li>
+        </ul>
+      </li>
+
+      <li>[POST]Login: <code>/user/login</code>
+        <ul style="display:block;height:30px;"><strong>headers:</strong>
+          <li><code>"Content-Type":"application/json"</code></li>
+        </ul>
+        <ul><strong>data:</strong>
+          <li><code>phone!:string</code></li>
+          <li><code>password!:string</code></li>
+        </ul>
+      </li>
+
+      <li>[POST]Check Phone number: <code>/user/check-phone</code>
+        <ul style="display:block;height:30px;"><strong>headers:</strong>
+          <li><code>"Content-Type":"application/json"</code></li>
+        </ul>
+        <ul><strong>data:</strong>
+          <li><code>phone!:string</code></li>
+        </ul>
+      </li>
+
+      <li>[POST]Find all users: <code>/user/get-all</code>
+      </li>
+      </pre>
+    </ul>
+  </div>
+
+  <div class="semitrans">
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+  </div>
+
+  <div class="dark">
+    <p>API created by <a href="https://fb.com/nhancao.0901">Cao Nhan</a> 🧡</p>
+  </div>
+</body>
+
+<script>
+  $(document).ready(function () {
+    $("#more").click(function () {
+      $('html, body').animate({
+        scrollTop: $('#test').offset().top
+      }, 1000);
+    });
+  });
+</script>
+
+</html>
