@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const db = require("./config/database");
 const friendRoute = require("./routes/friend.route");
 const path = require("path");
+const morgan = require("morgan");
 const multer = require("multer");
 const initRouter = require("./routes");
 const { default: upload } = require("./services/upload.service");
@@ -20,6 +21,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "uploads")));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(morgan("combined"));
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/html/home.html");

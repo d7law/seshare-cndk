@@ -33,8 +33,14 @@ const photoSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  user_location: {
+    type: String,
+  },
+  checkin_location: {
+    type: String,
+  },
 });
 
-const Model = mongoose.model("Photo", photoSchema);
-Model.createCollection();
-module.exports = Model;
+const Photo = mongoose.model("Photo", photoSchema);
+Photo.createCollection();
+module.exports = Photo;
