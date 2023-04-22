@@ -5,8 +5,22 @@ const _ = require("lodash");
 var response = require("../models/ResponseModel").response;
 
 class PhotoController {
+  // Get Home-Page-Post
+  homePagePosts = async (req, res) => {
+    const listPhoto = await Photo.find({ privacy: "public" });
+    if (!listPhoto || listPhoto.length < 1)
+      return res.status(404).json(response(false, listPhoto));
+    return res.status(200).json(response(true, listPhoto));
+  };
+  //Get all Photo of user
+  getPhoto = async (req, res) => {
+    const userId = req.body.userId;
+
+    const photos = await Photo.find({ user_id: userId });
+    res.status(200).json(response(true, photos));
+  };
   // Create New Post/Photo
-  async createPhoto(req, res) {
+  createPhoto = async (req, res) => {
     const userId = req.body.userId;
     const caption = req.body.caption;
     const isAvatar = req.body.isAvatar;
@@ -39,14 +53,6 @@ class PhotoController {
     } catch (err) {
       res.status(502).json(response(false));
     }
-  }
-
-  //Get all Photo of user
-  getPhoto = async (req, res) => {
-    const userId = req.body.userId;
-
-    const photos = await Photo.find({ user_id: userId });
-    res.status(200).json(response(true, photos));
   };
 }
 
