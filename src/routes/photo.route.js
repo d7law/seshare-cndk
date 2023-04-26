@@ -9,5 +9,10 @@ photoRoute.post(
   upload.single("photo"),
   photoController.createPhoto
 );
+photoRoute.post(
+  "/photo/upload",
+  upload.single("photo"),
+  photoController.uploadPhoto
+);
 
 module.exports = photoRoute;

@@ -2,9 +2,21 @@ const Photo = require("../models/Photo");
 const fs = require("fs");
 const path = require("path");
 const _ = require("lodash");
+const { makeRandom } = require("../utils/format-text");
 var response = require("../models/ResponseModel").response;
 
 class PhotoController {
+  // Upload photo
+  uploadPhoto = async (req, res) => {
+    const randomText = makeRandom(5);
+    let returnPath;
+    fs.renameSync(
+      req.file.path,
+      req.file.path.replace("undefined", randomText)
+    );
+    returnPath = path.basename(req.file.path.replace("undefined", randomText));
+    return res.status(200).json(response(true, returnPath));
+  };
   // Get Home-Page-Post
   homePagePosts = async (req, res) => {
     const listPhoto = await Photo.find({ privacy: "public" });

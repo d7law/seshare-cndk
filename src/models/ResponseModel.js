@@ -1,6 +1,6 @@
 class ResponseModel {
-  response(status, message) {
-    return { status, message };
+  response(status, data) {
+    return { status, data };
   }
   authResponse(status, user, token) {
     return { status, user, token };

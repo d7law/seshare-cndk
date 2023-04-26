@@ -5,6 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
 var response = require("../models/ResponseModel").authResponse;
+const { makeRandom } = require("../utils/format-text");
 class AuthController {
   //[GET] /user/all
   async getAll(req, res) {
