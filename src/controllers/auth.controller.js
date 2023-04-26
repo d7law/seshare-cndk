@@ -131,6 +131,28 @@ class AuthController {
       return res.status(503).json(response(false, "Loi server"));
     }
   }
+
+  //[POST] user profile
+  async userProfile(req, res) {
+    const phone = req.body.phone;
+    const profile = await User.findOne({ phone });
+    if (!profile)
+      return res.status(404).json(response(false, "Khong co user nay"));
+    return res.status(200).json(response(true, _.omit(profile, ["password"])));
+  }
+
+  //[POST] update profile user
+  async updateProfile(req, res) {
+    const phone = req.body.phone;
+
+    const modifyFields = _.omit(req.body, ["phone"]);
+    const updated = await User.findOneAndUpdate(
+      { phone: phone },
+      modifyFields,
+      { new: true }
+    );
+    res.json(updated);
+  }
 }
 
 module.exports = new AuthController();

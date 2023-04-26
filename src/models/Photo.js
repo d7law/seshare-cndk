@@ -2,10 +2,12 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const photoSchema = new Schema({
-  photo_path: {
-    type: String,
-    require: true,
-  },
+  photo_path: [
+    {
+      type: String,
+      require: true,
+    },
+  ],
   caption: {
     type: String,
     require: true,
