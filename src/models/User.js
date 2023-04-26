@@ -46,6 +46,7 @@ const userSchema = new Schema(
     bio: {
       type: String,
       require: false,
+      default: "Hello World",
     },
     study_info: {
       type: String,
