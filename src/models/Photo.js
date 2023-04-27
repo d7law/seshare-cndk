@@ -18,6 +18,13 @@ const photoSchema = new Schema({
     require: true,
     default: 0,
   },
+  comment: [
+    {
+      type: String,
+      required: false,
+    },
+  ],
+
   isAvatar: {
     type: Boolean,
     require: true,
@@ -37,9 +44,13 @@ const photoSchema = new Schema({
   },
   user_location: {
     type: String,
+    require: true,
+    default: "",
   },
   checkin_location: {
     type: String,
+    require: true,
+    default: "",
   },
 });
 

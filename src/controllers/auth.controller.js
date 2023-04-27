@@ -50,9 +50,13 @@ class AuthController {
       if (req.file) {
         await Photo.create({
           photo_path: avatarPath,
+          caption: "Register avatar",
           isAvatar: true,
           privacy: "public",
           user_id: createdUser._id,
+          user_location: "",
+          checkin_location: "",
+          comment: [],
         });
       }
       console.log(createdUser);

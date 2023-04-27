@@ -11,4 +11,9 @@ photoRoute.post(
   photoController.uploadPhoto
 );
 
+photoRoute.delete(
+  "/photo/delete-all-records",
+  photoController.deleteAllRecords
+);
+
 module.exports = photoRoute;

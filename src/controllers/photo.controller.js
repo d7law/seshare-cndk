@@ -6,6 +6,10 @@ const { makeRandom } = require("../utils/format-text");
 var response = require("../models/ResponseModel").response;
 
 class PhotoController {
+  // DELETE all records
+  deleteAllRecords = async (req, res) => {
+    return res.status(200).json(await Photo.deleteMany());
+  };
   // Upload photo
   uploadPhoto = async (req, res) => {
     const randomText = makeRandom(5);
@@ -49,7 +53,7 @@ class PhotoController {
       user_id: userId,
       user_location: userLocation,
       checkin_location: checkinLocation,
-      photo_path: photos,
+      comment: [],
     });
     const createdPhoto = await newPhoto.save();
     if (!createdPhoto) res.status(400).json(response(false));
