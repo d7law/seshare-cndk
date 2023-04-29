@@ -15,5 +15,6 @@ photoRoute.delete(
   "/photo/delete-all-records",
   photoController.deleteAllRecords
 );
+photoRoute.delete("/photo/delete-by-id", photoController.deleteRecordById);
 
 module.exports = photoRoute;

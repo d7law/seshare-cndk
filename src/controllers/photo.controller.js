@@ -10,6 +10,11 @@ class PhotoController {
   deleteAllRecords = async (req, res) => {
     return res.status(200).json(await Photo.deleteMany());
   };
+  // DELETE record by Id
+  deleteRecordById = async (req, res) => {
+    const result = await Photo.findByIdAndDelete(req.body.recordId);
+    return res.json(result);
+  };
   // Upload photo
   uploadPhoto = async (req, res) => {
     const randomText = makeRandom(5);
@@ -23,7 +28,9 @@ class PhotoController {
   };
   // Get Home-Page-Post
   homePagePosts = async (req, res) => {
-    const listPhoto = await Photo.find({ privacy: "public" });
+    const listPhoto = await Photo.find({ privacy: "public" })
+      .lean()
+      .populate("user_id", "avatar_path full_name");
     if (!listPhoto || listPhoto.length < 1)
       return res.status(404).json(response(false, listPhoto));
     return res.status(200).json(response(true, listPhoto));
