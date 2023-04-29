@@ -1,5 +1,8 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
-const checkToken = (req, res, next)=>{
-  
-}
+const checkToken = (req, res, next) => {
+  console.log(req.header("authorization"));
+  next();
+};
+
+module.exports = { checkToken };

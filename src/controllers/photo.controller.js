@@ -30,7 +30,8 @@ class PhotoController {
   homePagePosts = async (req, res) => {
     const listPhoto = await Photo.find({ privacy: "public" })
       .lean()
-      .populate("user_id", "avatar_path full_name");
+      .populate("user_id", "avatar_path full_name")
+      .sort({ uploadAt: -1 });
     if (!listPhoto || listPhoto.length < 1)
       return res.status(404).json(response(false, listPhoto));
     return res.status(200).json(response(true, listPhoto));
