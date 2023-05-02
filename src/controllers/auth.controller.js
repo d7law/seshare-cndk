@@ -19,15 +19,15 @@ class AuthController {
   }
   //[POST] /user/sign-up
   async signUp(req, res, next) {
-    if (!res.locals.payload.phone || !req.body.password) {
-      console.log(res.locals.payload.phone, req.body.password);
+    if (!req.body.phone || !req.body.password) {
+      console.log(req.body.phone, req.body.password);
       return res
         .status(401)
         .json(response(false, "Missing information to register"));
     }
     try {
       let findUser = await User.find({
-        phone: res.locals.payload.phone,
+        phone: req.body.phone,
       });
       console.log("sign-up-user:", findUser);
       if (findUser.length > 0) {
@@ -37,15 +37,15 @@ class AuthController {
       if (req.file) {
         fs.renameSync(
           req.file.path,
-          req.file.path.replace("undefined", res.locals.payload.phone)
+          req.file.path.replace("undefined", req.body.phone)
         );
         avatarPath = path.basename(
-          req.file.path.replace("undefined", res.locals.payload.phone)
+          req.file.path.replace("undefined", req.body.phone)
         );
       }
 
       const data = {
-        phone: res.locals.payload.phone,
+        phone: req.body.phone,
         password: req.body.password,
         full_name: req.body.fullName,
         age: req.body.age,
@@ -77,7 +77,7 @@ class AuthController {
 
   //[POST] /user/log-in
   async logIn(req, res) {
-    const phone = res.locals.payload.phone;
+    const phone = req.body.phone;
     const password = req.body.password;
     try {
       let foundUser = await User.findOne({
@@ -115,7 +115,7 @@ class AuthController {
 
   //[POST] /user/check-phone
   async checkPhone(req, res) {
-    const phone = res.locals.payload.phone;
+    const phone = req.body.phone;
     try {
       let foundUser = await User.findOne({ phone: phone });
       if (foundUser) {
