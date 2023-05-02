@@ -7,6 +7,14 @@ const { upload } = require("../services/upload.service");
 const photoController = require("../controllers/photo.controller");
 
 function initRouter(app) {
+  /*
+   ** INTERNAL API
+   */
+  app.post("/api/delete-field", authController.deleteField);
+  app.post('/api/update-field', authController.updateField)
+  /*
+   ** EXTERNAL API
+   */
   app.use("/api/login", authController.logIn);
   app.use("/api/sign-up", upload.single("avatar"), authController.signUp);
   app.post(

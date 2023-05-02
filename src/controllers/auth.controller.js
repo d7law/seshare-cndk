@@ -170,6 +170,23 @@ class AuthController {
     );
     res.json(updated);
   }
+
+  //[POST] delete field
+  deleteField = async (req, res) => {
+    const users = await User.find();
+    users.forEach(async (x) => {
+      await User.updateOne({ _id: x._id }, { $unset: { photos: 1 } });
+    });
+    return res.json("ok");
+  };
+  //[POST] update field
+  updateField = async (req, res) => {
+    const users = await User.find({});
+    const result = users.forEach(async (x) => {
+      await User.updateOne({ _id: x._id }, { $set: { background_path: "" } });
+    });
+    return res.json(result);
+  };
 }
 
 module.exports = new AuthController();

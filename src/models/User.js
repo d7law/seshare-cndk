@@ -43,6 +43,11 @@ const userSchema = new Schema(
       require: false,
       default: "",
     },
+    background_path: {
+      type: String,
+      require: false,
+      default: "",
+    },
     bio: {
       type: String,
       require: false,
@@ -56,12 +61,6 @@ const userSchema = new Schema(
       type: String,
       require: false,
     },
-    photos: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Photo",
-      },
-    ],
     friends: [
       {
         type: mongoose.Schema.Types.ObjectId,
