@@ -49,7 +49,7 @@ class AuthController {
         password: req.body.password,
         full_name: req.body.fullName,
         age: req.body.age,
-        avatar_path: avatarPath ?? "",
+        avatar_path: req.body.avatar,
         bio: "",
       };
       const newUser = new User(data);
