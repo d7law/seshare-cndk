@@ -43,6 +43,7 @@ class AuthController {
         full_name: req.body.fullName,
         age: req.body.age,
         avatar_path: avatarPath ?? "",
+        bio: "",
       };
       const newUser = new User(data);
       const createdUser = await newUser.save();
@@ -52,7 +53,7 @@ class AuthController {
           photo_path: avatarPath,
           caption: "Register avatar",
           isAvatar: true,
-          privacy: "public",
+          privacy: "private",
           user_id: createdUser._id,
           user_location: "",
           checkin_location: "",
