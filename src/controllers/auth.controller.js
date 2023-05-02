@@ -134,7 +134,7 @@ class AuthController {
 
   //[POST] /user/delete-account
   async deleteAccount(req, res) {
-    const phone = res.locals.payload.phone;
+    const phone = req.body.phone;
     try {
       const delUser = await User.deleteOne({ phone: phone });
       console.log(delUser);
