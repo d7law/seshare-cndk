@@ -16,6 +16,8 @@ photoRoute.post(
   photoController.uploadPhoto
 );
 
+photoRoute.post("/photo/like", checkToken, photoController.likePost);
+
 photoRoute.delete(
   "/photo/delete-all-records",
   photoController.deleteAllRecords

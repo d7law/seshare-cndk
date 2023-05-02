@@ -13,10 +13,18 @@ const photoSchema = new Schema({
     require: true,
     default: "",
   },
-  likes: {
+  total_likes: {
     type: Number,
     require: true,
     default: 0,
+  },
+  list_likes: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  liked: {
+    type: Boolean,
+    default: false,
   },
   comment: [
     {
@@ -24,7 +32,6 @@ const photoSchema = new Schema({
       required: false,
     },
   ],
-
   isAvatar: {
     type: Boolean,
     require: true,

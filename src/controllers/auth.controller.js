@@ -19,10 +19,17 @@ class AuthController {
   }
   //[POST] /user/sign-up
   async signUp(req, res, next) {
+    if (!res.locals.payload.phone || !req.body.password) {
+      console.log(res.locals.payload.phone, req.body.password);
+      return res
+        .status(401)
+        .json(response(false, "Missing information to register"));
+    }
     try {
       let findUser = await User.find({
-        phone: req.body.phone,
+        phone: res.locals.payload.phone,
       });
+      console.log("sign-up-user:", findUser);
       if (findUser.length > 0) {
         return res.status(404).json(response(false, "User nay da ton tai"));
       }
@@ -30,15 +37,15 @@ class AuthController {
       if (req.file) {
         fs.renameSync(
           req.file.path,
-          req.file.path.replace("undefined", req.body.phone)
+          req.file.path.replace("undefined", res.locals.payload.phone)
         );
         avatarPath = path.basename(
-          req.file.path.replace("undefined", req.body.phone)
+          req.file.path.replace("undefined", res.locals.payload.phone)
         );
       }
 
       const data = {
-        phone: req.body.phone,
+        phone: res.locals.payload.phone,
         password: req.body.password,
         full_name: req.body.fullName,
         age: req.body.age,
@@ -70,7 +77,7 @@ class AuthController {
 
   //[POST] /user/log-in
   async logIn(req, res) {
-    const phone = req.body.phone;
+    const phone = res.locals.payload.phone;
     const password = req.body.password;
     try {
       let foundUser = await User.findOne({
@@ -91,8 +98,12 @@ class AuthController {
         return res.status(401).json(response(false, "Unauthorized"));
       }
       const jwtoken = jwt.sign(
-        { id: foundUser._id, exp: Math.floor(Date.now() / 1000 + 60 * 60) },
-        process.env.JWT_SECRET
+        {
+          id: foundUser._id,
+          phone: foundUser.phone,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "30d" }
       );
       const user = _.omit(foundUser, ["password"]);
       return res.status(200).json(response(true, user, jwtoken));
@@ -104,7 +115,7 @@ class AuthController {
 
   //[POST] /user/check-phone
   async checkPhone(req, res) {
-    const phone = req.body.phone;
+    const phone = res.locals.payload.phone;
     try {
       let foundUser = await User.findOne({ phone: phone });
       if (foundUser) {
@@ -123,7 +134,7 @@ class AuthController {
 
   //[POST] /user/delete-account
   async deleteAccount(req, res) {
-    const phone = req.body.phone;
+    const phone = res.locals.payload.phone;
     try {
       const delUser = await User.deleteOne({ phone: phone });
       console.log(delUser);
@@ -139,7 +150,8 @@ class AuthController {
 
   //[POST] user profile
   async userProfile(req, res) {
-    const phone = req.body.phone;
+    const phone = res.locals.payload.phone;
+    console.log(phone);
     const profile = await User.findOne({ phone });
     if (!profile)
       return res.status(404).json(response(false, "Khong co user nay"));
@@ -148,7 +160,7 @@ class AuthController {
 
   //[POST] update profile user
   async updateProfile(req, res) {
-    const phone = req.body.phone;
+    const phone = res.locals.payload.phone;
 
     const modifyFields = _.omit(req.body, ["phone"]);
     const updated = await User.findOneAndUpdate(

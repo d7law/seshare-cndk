@@ -1,6 +1,7 @@
 const Photo = require("../models/Photo");
 const fs = require("fs");
 const path = require("path");
+const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const { makeRandom } = require("../utils/format-text");
 var response = require("../models/ResponseModel").response;
@@ -38,14 +39,14 @@ class PhotoController {
   };
   //Get all Photo of user
   getPhoto = async (req, res) => {
-    const userId = req.body.userId;
+    const userId = res.locals.payload.id;
 
     const photos = await Photo.find({ user_id: userId });
     res.status(200).json(response(true, photos));
   };
   // Create New Post/Photo
   createPost = async (req, res) => {
-    const userId = req.body.userId;
+    const userId = res.locals.payload.id;
     const caption = req.body.caption;
     const isAvatar = req.body.isAvatar;
     const userLocation = req.body.userLocation;
@@ -66,6 +67,11 @@ class PhotoController {
     const createdPhoto = await newPhoto.save();
     if (!createdPhoto) res.status(400).json(response(false));
     return res.status(200).json(response(true, newPhoto));
+  };
+
+  //[POST like post]
+  likePost = async (req, res) => {
+    console.log("payload: ", res.locals.payload);
   };
 }
 
