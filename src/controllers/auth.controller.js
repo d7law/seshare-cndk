@@ -84,9 +84,7 @@ class AuthController {
         phone: phone,
       });
       if (!foundUser) {
-        return res
-          .status(404)
-          .json(response(false, "So dien thoai nay khong ton tai!"));
+        return res.status(404).json({ status: false });
       }
       //const compare = bcrypt.compareSync(password, foundUser.password);
       const compare = (() => {
@@ -95,7 +93,7 @@ class AuthController {
       })();
       console.log(`this is compare`, compare);
       if (!compare) {
-        return res.status(401).json(response(false, "Unauthorized"));
+        return res.status(401).json({ status: false });
       }
       const jwtoken = jwt.sign(
         {
@@ -109,7 +107,7 @@ class AuthController {
       return res.status(200).json(response(true, user, jwtoken));
     } catch (error) {
       console.log(error);
-      return res.status(503).json(response(false, "Loi server"));
+      return res.status(503).json({ status: false });
     }
   }
 
