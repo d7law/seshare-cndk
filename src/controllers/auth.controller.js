@@ -151,9 +151,26 @@ class AuthController {
     const phone = res.locals.payload.phone;
     console.log(phone);
     const profile = await User.findOne({ phone });
-    if (!profile)
-      return res.status(404).json(response(false, "Khong co user nay"));
+    if (!profile) return res.status(404).json({ status: false });
     return res.status(200).json(response(true, _.omit(profile, ["password"])));
+  }
+
+  //[POST] another profile
+  async anotherProfile(req, res) {
+    const userId = res.locals.payload.id;
+    const anotherId = req.body.anotherId;
+    if (anotherId == userId) {
+      const profile = await User.findById(userId);
+      if (!profile) return res.status(404).json({ status: false });
+      return res
+        .status(200)
+        .json(response(true, _.omit(profile, ["password"])));
+    }
+    const anotherProfile = await User.findById(anotherId);
+    if (!anotherProfile) return res.status(404).json({ status: false });
+    return res
+      .status(200)
+      .json(response(true, _.omit(anotherProfile, ["password"])));
   }
 
   //[POST] update profile user
