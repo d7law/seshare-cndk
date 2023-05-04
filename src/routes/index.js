@@ -24,12 +24,11 @@ function initRouter(app) {
     const fit = req.query.fit;
     const format = req.query.format;
 
-    let width, height;
     if (widthStr) {
-      width = +widthStr;
+      width = parseInt(parseFloat(widthStr).toFixed());
     }
     if (heightStr) {
-      height = +heightStr;
+      height = parseInt(parseFloat(heightStr).toFixed());
     }
     res.type(`image/${format || "png"}`);
     resize(
