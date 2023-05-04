@@ -49,6 +49,7 @@ function initRouter(app) {
     photoController.uploadPhoto
   );
 
+  app.use("/api/forgot-password", authController.forgotPsw);
   app.use("/api/check-phone", authController.checkPhone);
   app.use("/api/delete-account", authController.deleteAccount);
 

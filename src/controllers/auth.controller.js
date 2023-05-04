@@ -187,6 +187,38 @@ class AuthController {
     });
     return res.json(result);
   };
+
+  //[POST] change password
+  changePsw = async (req, res) => {
+    const phone = res.locals.payload.phone;
+    const oldPassword = req.body.oldPassword;
+    const newPassword = req.body.newPassword;
+
+    const foundUser = await User.findOne({ phone: phone });
+    if (oldPassword != foundUser.password) {
+      return res.status(401).json({ status: false });
+    }
+    const updated = await User.findOneAndUpdate(
+      { phone: phone },
+      { $set: { password: newPassword } },
+      { new: true }
+    );
+    return res.status(200).json(response(true, updated));
+  };
+
+  //[POST] forgot password
+  forgotPsw = async (req, res) => {
+    const phone = req.body.phone;
+    const newPassword = req.body.newPassword;
+    const foundUser = await User.findOne({ phone: phone });
+    if (!foundUser) return res.status(404).json({ status: false });
+    const updated = await User.findOneAndUpdate(
+      { phone: phone },
+      { $set: { password: newPassword } },
+      { new: true }
+    );
+    return res.status(200).json(response(true, updated));
+  };
 }
 
 module.exports = new AuthController();
