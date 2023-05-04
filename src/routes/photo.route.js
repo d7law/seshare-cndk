@@ -9,7 +9,8 @@ photoRoute.post(
   photoController.homePagePosts
 );
 photoRoute.post("/photo/get-photo-user", photoController.getPhoto);
-photoRoute.post('/photo/get-list-photos-user', photoController.getListPhoto)
+photoRoute.post('/photo/get-list-photos-user', photoController.getListPhoto);
+photoRoute.post('/photo/get-list-photos-another-user', photoController.getListPhotoAnotherUser)
 photoRoute.post("/photo/upload-post", photoController.createPost);
 photoRoute.post(
   "/photo/upload",

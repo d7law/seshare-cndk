@@ -51,6 +51,19 @@ class PhotoController {
     const listPhoto = _.flatMap(photos, "photo_path");
     return res.status(200).json({ status: true, listPhotos: listPhoto });
   };
+  //Get list another user
+  getListPhotoAnotherUser = async (req, res) => {
+    const anotherId = req.body.anotherId;
+    const userId = res.locals.payload.id;
+    if (anotherId == userId) {
+      const photos = await Photo.find({ user_id: userId });
+      const listPhoto = _.flatMap(photos, "photo_path");
+      return res.status(200).json({ status: true, listPhotos: listPhoto });
+    }
+    const photos = await Photo.find({ user_id: anotherId, privacy: "public" });
+    const listPhoto = _.flatMap(photos, "photo_path");
+    return res.status(200).json({ status: true, listPhotos: listPhoto });
+  };
   // Create New Post/Photo
   createPost = async (req, res) => {
     const userId = res.locals.payload.id;
