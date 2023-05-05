@@ -6,6 +6,7 @@ const fs = require("fs");
 const jwt = require("jsonwebtoken");
 var response = require("../models/ResponseModel").authResponse;
 const { makeRandom } = require("../utils/format-text");
+const { formatToDate } = require("../utils/format-date");
 class AuthController {
   //[GET] /user/all
   async getAll(req, res) {
@@ -21,9 +22,7 @@ class AuthController {
   async signUp(req, res, next) {
     if (!req.body.phone || !req.body.password) {
       console.log(req.body.phone, req.body.password);
-      return res
-        .status(401)
-        .json(response(false, "Missing information to register"));
+      return res.status(401).json({ status: false });
     }
     try {
       let findUser = await User.find({
@@ -31,7 +30,7 @@ class AuthController {
       });
       console.log("sign-up-user:", findUser);
       if (findUser.length > 0) {
-        return res.status(404).json(response(false, "User nay da ton tai"));
+        return res.status(404).json({ status: false });
       }
       let avatarPath;
       if (req.file) {
@@ -68,10 +67,12 @@ class AuthController {
         });
       }
       console.log(createdUser);
-      return res.status(200).json(response(true, newUser));
+      const returnPro = _.omit(createdUser.toObject(), ["password", "age"]);
+      returnPro.age = formatToDate(createdUser.age);
+      return res.status(200).json(response(true, returnPro));
     } catch (err) {
       console.log(err);
-      return res.status(503).json(response(false, "Loi Server"));
+      return res.status(503).json({ status: false });
     }
   }
 
@@ -103,8 +104,9 @@ class AuthController {
         process.env.JWT_SECRET,
         { expiresIn: "30d" }
       );
-      const user = _.omit(foundUser, ["password"]);
-      return res.status(200).json(response(true, user, jwtoken));
+      const returnPro = _.omit(foundUser.toObject(), ["password", "age"]);
+      returnPro.age = formatToDate(foundUser.age);
+      return res.status(200).json(response(true, returnPro, jwtoken));
     } catch (error) {
       console.log(error);
       return res.status(503).json({ status: false });
@@ -149,10 +151,13 @@ class AuthController {
   //[POST] user profile
   async userProfile(req, res) {
     const phone = res.locals.payload.phone;
-    console.log(phone);
-    const profile = await User.findOne({ phone });
+    let profile = await User.findOne({ phone });
     if (!profile) return res.status(404).json({ status: false });
-    return res.status(200).json(response(true, _.omit(profile, ["password"])));
+
+    const returnPro = _.omit(profile.toObject(), ["password", "age"]);
+    returnPro.age = formatToDate(profile.age);
+
+    return res.status(200).json(response(true, returnPro));
   }
 
   //[POST] another profile
@@ -162,15 +167,16 @@ class AuthController {
     if (anotherId == userId) {
       const profile = await User.findById(userId);
       if (!profile) return res.status(404).json({ status: false });
-      return res
-        .status(200)
-        .json(response(true, _.omit(profile, ["password"])));
+      const returnPro = _.omit(profile.toObject(), ["password", "age"]);
+      returnPro.age = formatToDate(profile.age);
+      return res.status(200).json(response(true, returnPro));
     }
     const anotherProfile = await User.findById(anotherId);
     if (!anotherProfile) return res.status(404).json({ status: false });
-    return res
-      .status(200)
-      .json(response(true, _.omit(anotherProfile, ["password"])));
+    const returnPro = _.omit(anotherProfile.toObject(), ["password", "age"]);
+    returnPro.age = formatToDate(anotherProfile.age);
+    console.log(returnPro);
+    return res.status(200).json(response(true, returnPro));
   }
 
   //[POST] update profile user
@@ -178,12 +184,18 @@ class AuthController {
     const phone = res.locals.payload.phone;
 
     const modifyFields = _.omit(req.body, ["phone"]);
-    const updated = await User.findOneAndUpdate(
-      { phone: phone },
-      modifyFields,
-      { new: true }
-    );
-    res.json(updated);
+    try {
+      const updated = await User.findOneAndUpdate(
+        { phone: phone },
+        modifyFields,
+        { new: true }
+      );
+      const returnPro = _.omit(updated.toObject(), ["password", "age"]);
+      returnPro.age = formatToDate(updated.age);
+      return res.status(200).json(response(true, returnPro));
+    } catch (err) {
+      return res.status(503).json({ status: false });
+    }
   }
 
   //[POST] delete field
