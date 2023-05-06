@@ -17,6 +17,9 @@ function initRouter(app) {
   /*
    ** EXTERNAL API
    */
+  app.get("/video/:path", (req, res) => {
+    return res.sendFile(path.join(__dirname, "..", "uploads", req.params.path));
+  });
   app.get("/:path", (req, res) => {
     const pathStr = req.params.path;
     const widthStr = req.query.width;
