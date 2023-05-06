@@ -1,4 +1,5 @@
 const Photo = require("../models/Photo");
+const LikePostOfUser = require("../models/LikePostOfUser");
 const fs = require("fs");
 const path = require("path");
 const jwt = require("jsonwebtoken");
@@ -91,7 +92,94 @@ class PhotoController {
 
   //[POST like post]
   likePost = async (req, res) => {
-    console.log("payload: ", res.locals.payload);
+    const userId = res.locals.payload.id;
+    const postToLike = req.body.postId;
+
+    //find is this post liked
+    let likePostOfUser = await LikePostOfUser.findOne({ user_id: userId });
+    if (!likePostOfUser) {
+      const newLikePostOfUser = await LikePostOfUser.create({
+        user_id: userId,
+        list_posts_liked: [],
+      });
+      likePostOfUser = await newLikePostOfUser.save();
+    }
+
+    const listPostLikedOfPost = likePostOfUser.list_posts_liked.map((item) =>
+      item.toString()
+    );
+    const isLike = _.includes(listPostLikedOfPost, postToLike);
+    if (isLike) {
+      try {
+        const updateLikePostOfUser = await LikePostOfUser.updateOne(
+          { user_id: userId },
+          { $pull: { list_posts_liked: postToLike } }
+        );
+        const updateListLikeAndTotalLikeOfPost = await Photo.findByIdAndUpdate(
+          postToLike,
+          {
+            $pull: { list_likes: userId },
+            $inc: { total_likes: -1 },
+          },
+          { new: true }
+        );
+        return res
+          .status(200)
+          .json(
+            response(
+              true,
+              _.pick(updateListLikeAndTotalLikeOfPost, [
+                "_id",
+                "total_likes",
+                "list_likes",
+              ])
+            )
+          );
+      } catch (error) {
+        return res.status(503).json({ status: false, error });
+      }
+    } else if (!isLike) {
+      try {
+        const updateLikePostOfUser = await LikePostOfUser.updateOne(
+          { user_id: userId },
+          { $push: { list_posts_liked: postToLike } }
+        );
+        const updateListLikeAndTotalLikeOfPost = await Photo.findByIdAndUpdate(
+          postToLike,
+          {
+            $push: { list_likes: userId },
+            $inc: { total_likes: 1 },
+          },
+          { new: true }
+        );
+        return res
+          .status(200)
+          .json(
+            response(
+              true,
+              _.pick(updateListLikeAndTotalLikeOfPost, [
+                "_id",
+                "total_likes",
+                "list_likes",
+              ])
+            )
+          );
+      } catch (error) {
+        return res.status(503).json({ status: false, error });
+      }
+    }
+  };
+
+  //Get list like of Post
+  getListLikeOfPost = async (req, res) => {
+    const postId = req.body.postId;
+    const listLikeOfPost = await Photo.findById(postId)
+      .lean()
+      .populate("list_likes", "_id full_name avatar_path");
+    if (!listLikeOfPost) return res.status(500).json({ status: false });
+    return res
+      .status(200)
+      .json(response(true, _.pick(listLikeOfPost, ["_id", "list_likes"])));
   };
 }
 

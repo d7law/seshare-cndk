@@ -9,8 +9,11 @@ photoRoute.post(
   photoController.homePagePosts
 );
 photoRoute.post("/photo/get-photo-user", photoController.getPhoto);
-photoRoute.post('/photo/get-list-photos-user', photoController.getListPhoto);
-photoRoute.post('/photo/get-list-photos-another-user', photoController.getListPhotoAnotherUser)
+photoRoute.post("/photo/get-list-photos-user", photoController.getListPhoto);
+photoRoute.post(
+  "/photo/get-list-photos-another-user",
+  photoController.getListPhotoAnotherUser
+);
 photoRoute.post("/photo/upload-post", photoController.createPost);
 photoRoute.post(
   "/photo/upload",
@@ -18,7 +21,8 @@ photoRoute.post(
   photoController.uploadPhoto
 );
 
-photoRoute.post("/photo/like", checkToken, photoController.likePost);
+photoRoute.post("/photo/like", photoController.likePost);
+photoRoute.post("/photo/list-like-of-post", photoController.getListLikeOfPost);
 
 photoRoute.delete(
   "/photo/delete-all-records",

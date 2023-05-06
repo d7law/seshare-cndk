@@ -208,9 +208,9 @@ class AuthController {
   };
   //[POST] update field
   updateField = async (req, res) => {
-    const users = await User.find({});
+    const users = await Photo.find({});
     const result = users.forEach(async (x) => {
-      await User.updateOne({ _id: x._id }, { $set: { background_path: "" } });
+      await Photo.updateOne({ _id: x._id }, { $set: { list_likes: [] } });
     });
     return res.json(result);
   };

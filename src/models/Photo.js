@@ -18,10 +18,12 @@ const photoSchema = new Schema({
     require: true,
     default: 0,
   },
-  list_likes: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-  },
+  list_likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   liked: {
     type: Boolean,
     default: false,
