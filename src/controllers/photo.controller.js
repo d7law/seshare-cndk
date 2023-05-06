@@ -30,12 +30,23 @@ class PhotoController {
   };
   // Get Home-Page-Post
   homePagePosts = async (req, res) => {
-    const listPhoto = await Photo.find({ privacy: "public" })
+    const userId = res.locals.payload.id;
+    let listPhoto = await Photo.find({ privacy: "public" })
       .lean()
       .populate("user_id", "avatar_path full_name")
       .sort({ uploadAt: -1 });
+
     if (!listPhoto || listPhoto.length < 1)
       return res.status(404).json(response(false, listPhoto));
+
+    //check liked
+    listPhoto.forEach((x) => {
+      const listLikeOfThisPost = _.map(x.list_likes, (item) => item.toString());
+      const isLike = _.includes(listLikeOfThisPost, userId);
+      if (isLike) x.liked = true;
+      console.log(x);
+    });
+
     return res.status(200).json(response(true, listPhoto));
   };
   //Get all Photo of user
