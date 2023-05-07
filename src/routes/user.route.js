@@ -7,6 +7,8 @@ userRoute.post("/user/profile", authController.userProfile);
 userRoute.post("/user/another-profile", authController.anotherProfile);
 userRoute.post("/user/updale-profile", authController.updateProfile);
 userRoute.post("/user/change-password", authController.changePsw);
+
+userRoute.post("/user/search");
 userRoute.get("/configs", (req, res) => {
   return res.json({ version: "1.0.0" });
 });

@@ -246,6 +246,11 @@ class AuthController {
     );
     return res.status(200).json(response(true, updated));
   };
+
+  //get all user to search
+  searchingUser = async (req, res)=>{
+    
+  }
 }
 
 module.exports = new AuthController();
