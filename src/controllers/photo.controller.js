@@ -76,6 +76,19 @@ class PhotoController {
     const listPhoto = _.flatMap(photos, "photo_path");
     return res.status(200).json({ status: true, listPhotos: listPhoto });
   };
+  // Get all "public" photo_path to display in user
+  getListAllPhoto = async (req, res) => {
+    const userId = res.locals.payload.id;
+
+    const photos = await Photo.find({
+      privacy: "public",
+      user_id: { $ne: userId },
+    }).exec();
+
+    const listPhoto = _.flatMap(photos, "photo_path");
+
+    return res.status(200).json({ status: true, listPhotos: listPhoto });
+  };
   // Create New Post/Photo
   createPost = async (req, res) => {
     const userId = res.locals.payload.id;

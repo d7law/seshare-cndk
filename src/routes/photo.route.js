@@ -14,6 +14,8 @@ photoRoute.post(
   "/photo/get-list-photos-another-user",
   photoController.getListPhotoAnotherUser
 );
+photoRoute.post("/photo/get-list-all-photos", photoController.getListAllPhoto);
+
 photoRoute.post("/photo/upload-post", photoController.createPost);
 photoRoute.post(
   "/photo/upload",
