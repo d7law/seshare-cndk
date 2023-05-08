@@ -5,7 +5,7 @@ const likePostOfUserSchema = new Schema({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    require: true,
+    required: true,
     unique: true,
   },
   list_posts_liked: [

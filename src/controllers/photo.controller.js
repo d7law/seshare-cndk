@@ -1,5 +1,6 @@
 const Photo = require("../models/Photo");
 const LikePostOfUser = require("../models/LikePostOfUser");
+const Comments = require("../models/Comment");
 const fs = require("fs");
 const path = require("path");
 const jwt = require("jsonwebtoken");
@@ -204,6 +205,38 @@ class PhotoController {
     return res
       .status(200)
       .json(response(true, _.pick(listLikeOfPost, ["_id", "list_likes"])));
+  };
+
+  // Add Comment
+  // Enhance add photo to comment
+  addComment = async (req, res) => {
+    const userId = res.locals.payload.id;
+    const postId = req.body.postId;
+    const comment = req.body.comment;
+
+    let foundPost = await Comments.findOne({ post_id: postId });
+    if (!foundPost) {
+      foundPost = await Comments.create({
+        post_id: postId,
+        comments: [],
+      });
+    }
+
+    try {
+      const dataToInsert = { user_id: userId, comment: comment };
+      const addComment = await Comments.findOneAndUpdate(
+        {
+          post_id: postId,
+        },
+        {
+          $push: { comments: dataToInsert },
+        }
+      );
+      return res.status(200).json({ status: true });
+    } catch (error) {
+      console.log("add comment failed: ", error);
+      return res.status(503).json({ status: false });
+    }
   };
 }
 

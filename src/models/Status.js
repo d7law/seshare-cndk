@@ -9,7 +9,6 @@ const statusSchema = new Schema({
   user_status: {
     type: String,
     default: "Hello SeShare",
-    require: false,
   },
 });
 

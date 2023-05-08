@@ -5,61 +5,52 @@ const userSchema = new Schema(
   {
     phone: {
       type: String,
-      require: true,
+
       unique: true,
     },
     password: {
       type: String,
-      require: true,
     },
     age: {
       type: Date,
-      require: false,
     },
     gender: {
       type: String,
       enum: ["Male", "Female", "Other"],
       default: "Other",
-      require: false,
     },
     first_name: {
       type: String,
-      require: false,
     },
     last_name: {
       type: String,
-      require: false,
     },
     full_name: {
       type: String,
-      require: true,
     },
     place: {
       type: String,
-      require: false,
     },
     avatar_path: {
       type: String,
-      require: false,
+
       default: "",
     },
     background_path: {
       type: String,
-      require: false,
+
       default: "",
     },
     bio: {
       type: String,
-      require: false,
+
       default: "Hello World",
     },
     study_info: {
       type: String,
-      require: false,
     },
     work_info: {
       type: String,
-      require: false,
     },
     friends: [
       {

@@ -25,6 +25,7 @@ photoRoute.post(
 
 photoRoute.post("/photo/like", photoController.likePost);
 photoRoute.post("/photo/list-like-of-post", photoController.getListLikeOfPost);
+photoRoute.post("/photo/add-comment", photoController.addComment);
 
 photoRoute.delete(
   "/photo/delete-all-records",

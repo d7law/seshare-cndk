@@ -5,17 +5,16 @@ const photoSchema = new Schema({
   photo_path: [
     {
       type: String,
-      require: true,
     },
   ],
   caption: {
     type: String,
-    require: true,
+
     default: "",
   },
   total_likes: {
     type: Number,
-    require: true,
+
     default: 0,
   },
   list_likes: [
@@ -28,15 +27,15 @@ const photoSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  comment: [
-    {
-      type: String,
-      required: false,
-    },
-  ],
+  total_comment: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+
   isAvatar: {
     type: Boolean,
-    require: true,
+
     default: false,
   },
   privacy: {
@@ -53,12 +52,12 @@ const photoSchema = new Schema({
   },
   user_location: {
     type: String,
-    require: true,
+
     default: "",
   },
   checkin_location: {
     type: String,
-    require: true,
+
     default: "",
   },
 });

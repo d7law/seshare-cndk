@@ -208,9 +208,11 @@ class AuthController {
   };
   //[POST] update field
   updateField = async (req, res) => {
-    const users = await Photo.find({});
-    const result = users.forEach(async (x) => {
-      await Photo.updateOne({ _id: x._id }, { $set: { list_likes: [] } });
+    const photos = await Photo.find({});
+    const result = photos.forEach(async (x) => {
+      x.total_comment = 0;
+      await x.save();
+      //await Photo.updateOne({ _id: x._id }, { $set: { list_likes: [] } });
     });
     return res.json(result);
   };
@@ -248,9 +250,7 @@ class AuthController {
   };
 
   //get all user to search
-  searchingUser = async (req, res)=>{
-    
-  }
+  searchingUser = async (req, res) => {};
 }
 
 module.exports = new AuthController();
