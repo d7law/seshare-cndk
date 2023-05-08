@@ -238,6 +238,27 @@ class PhotoController {
       return res.status(503).json({ status: false });
     }
   };
+
+  // Show list comments of post
+  getListCommentOfPost = async (req, res) => {
+    const postId = req.body.postId;
+
+    let foundComments = await Comments.findOne({ post_id: postId })
+      .lean()
+      .populate("comments.user_id", "_id full_name avatar_path");
+    if (!foundComments) {
+      const initComment = await Comments.create({
+        post_id: postId,
+        comments: [],
+      });
+      return res.status(200).json({ status: true, data: initComment });
+    }
+
+    foundComments.comments = _.map(foundComments.comments, (item) => {
+      return { user: item.user_id, comment: item.comment };
+    });
+    return res.status(200).json({ status: true, data: foundComments });
+  };
 }
 
 module.exports = new PhotoController();
