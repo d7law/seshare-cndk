@@ -6,22 +6,17 @@ const path = require("path");
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const { makeRandom } = require("../utils/format-text");
-const { countMinutes } = require("../utils/format-date");
 var response = require("../models/ResponseModel").response;
 
 class PhotoController {
   // DELETE all records
-  deleteAllRecordsPost = async (req, res) => {
+  deleteAllRecords = async (req, res) => {
     return res.status(200).json(await Photo.deleteMany());
   };
   // DELETE record by Id
-  deleteRecordByPostId = async (req, res) => {
+  deleteRecordById = async (req, res) => {
     const result = await Photo.findByIdAndDelete(req.body.recordId);
     return res.json(result);
-  };
-  // DELET all comments
-  deleteAllRecordsComment = async (req, res) => {
-    return res.status(200).json(await Comments.deleteMany());
   };
   // Upload photo
   uploadPhoto = async (req, res) => {
@@ -215,9 +210,6 @@ class PhotoController {
           $push: { comments: dataToInsert },
         }
       );
-      const totalComments = await Photo.findByIdAndUpdate(postId, {
-        $inc: { total_comment: 1 },
-      });
       return res.status(200).json({ status: true });
     } catch (error) {
       console.log("add comment failed: ", error);
@@ -241,29 +233,9 @@ class PhotoController {
     }
 
     foundComments.comments = _.map(foundComments.comments, (item) => {
-      const countTime = countMinutes(item.comment_time);
-      let statusTime;
-      if (countTime.minutes === 0) {
-        statusTime = "Vừa xong";
-      } else if (countTime.minutes > 0 && countTime.hours === 0) {
-        statusTime = `${countTime.minutes} phút trước`;
-      } else if (countTime.hours > 0 && countTime.dates === 0) {
-        statusTime = `${countTime.hours} tiếng trước`;
-      } else if (countTime.dates > 0 && countTime.weeks === 0) {
-        statusTime = `${countTime.dates} ngày trước`;
-      } else {
-        statusTime = `${countTime.weeks} tuần trước`;
-      }
-      return {
-        user: item.user_id,
-        comment: item.comment,
-        comment_time: statusTime,
-      };
+      return { user: item.user_id, comment: item.comment };
     });
-    return res.status(200).json({
-      status: true,
-      data: foundComments,
-    });
+    return res.status(200).json({ status: true, data: foundComments });
   };
 }
 

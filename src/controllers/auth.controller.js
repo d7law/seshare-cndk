@@ -68,9 +68,7 @@ class AuthController {
       }
       console.log(createdUser);
       const returnPro = _.omit(createdUser.toObject(), ["password", "age"]);
-      returnPro.age
-        ? (returnPro.age = formatToDate(createdUser.age))
-        : (returnPro.age = "");
+      returnPro.age = formatToDate(createdUser.age);
       return res.status(200).json(response(true, returnPro));
     } catch (err) {
       console.log(err);
@@ -107,9 +105,7 @@ class AuthController {
         { expiresIn: "30d" }
       );
       const returnPro = _.omit(foundUser.toObject(), ["password", "age"]);
-      returnPro.age
-        ? (returnPro.age = formatToDate(foundUser.age))
-        : (returnPro.age = "");
+      returnPro.age = formatToDate(foundUser.age);
       return res.status(200).json(response(true, returnPro, jwtoken));
     } catch (error) {
       console.log(error);
@@ -159,9 +155,7 @@ class AuthController {
     if (!profile) return res.status(404).json({ status: false });
 
     const returnPro = _.omit(profile.toObject(), ["password", "age"]);
-    returnPro.age
-      ? (returnPro.age = formatToDate(profile.age))
-      : (returnPro.age = "");
+    returnPro.age = formatToDate(profile.age);
 
     return res.status(200).json(response(true, returnPro));
   }
@@ -180,9 +174,7 @@ class AuthController {
     const anotherProfile = await User.findById(anotherId);
     if (!anotherProfile) return res.status(404).json({ status: false });
     const returnPro = _.omit(anotherProfile.toObject(), ["password", "age"]);
-    returnPro.age
-      ? (returnPro.age = formatToDate(anotherProfile.age))
-      : (returnPro.age = "");
+    returnPro.age = formatToDate(anotherProfile.age);
     console.log(returnPro);
     return res.status(200).json(response(true, returnPro));
   }
@@ -199,9 +191,7 @@ class AuthController {
         { new: true }
       );
       const returnPro = _.omit(updated.toObject(), ["password", "age"]);
-      returnPro.age
-        ? (returnPro.age = formatToDate(updated.age))
-        : (returnPro.age = "");
+      returnPro.age = formatToDate(updated.age);
       return res.status(200).json(response(true, returnPro));
     } catch (err) {
       return res.status(503).json({ status: false });

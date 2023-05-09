@@ -18,7 +18,7 @@ const commentSchema = new Schema({
       comment_time: {
         type: Date,
         default: Date.now(),
-      }
+      },
     },
   ],
 });
