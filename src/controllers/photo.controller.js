@@ -148,20 +148,9 @@ class PhotoController {
           },
           { new: true }
         );
-        return res
-          .status(200)
-          .json(
-            response(
-              true,
-              _.pick(updateListLikeAndTotalLikeOfPost, [
-                "_id",
-                "total_likes",
-                "list_likes",
-              ])
-            )
-          );
+        return res.status(200).json(response(true));
       } catch (error) {
-        return res.status(503).json({ status: false, error });
+        return res.status(503).json({ status: false });
       }
     } else if (!isLike) {
       try {
@@ -177,20 +166,9 @@ class PhotoController {
           },
           { new: true }
         );
-        return res
-          .status(200)
-          .json(
-            response(
-              true,
-              _.pick(updateListLikeAndTotalLikeOfPost, [
-                "_id",
-                "total_likes",
-                "list_likes",
-              ])
-            )
-          );
+        return res.status(200).json(response(true));
       } catch (error) {
-        return res.status(503).json({ status: false, error });
+        return res.status(503).json({ status: false });
       }
     }
   };
