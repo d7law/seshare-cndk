@@ -33,8 +33,8 @@ photoRoute.post(
 
 photoRoute.delete(
   "/photo/delete-all-records",
-  photoController.deleteAllRecords
+  photoController.deleteAllRecordsPost
 );
-photoRoute.delete("/photo/delete-by-id", photoController.deleteRecordById);
+photoRoute.delete("/photo/delete-by-id", photoController.deleteRecordByPostId);
 
 module.exports = photoRoute;

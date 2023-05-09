@@ -14,6 +14,10 @@ function initRouter(app) {
    */
   app.post("/api/delete-field", authController.deleteField);
   app.post("/api/update-field", authController.updateField);
+  app.delete(
+    "/api/delete-all-comments",
+    photoController.deleteAllRecordsComment
+  );
   /*
    ** EXTERNAL API
    */
