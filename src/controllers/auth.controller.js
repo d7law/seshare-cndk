@@ -6,7 +6,7 @@ const fs = require("fs");
 const jwt = require("jsonwebtoken");
 var response = require("../models/ResponseModel").authResponse;
 const { makeRandom } = require("../utils/format-text");
-const { formatToDate } = require("../utils/format-date");
+const { formatToDate, countMinutes } = require("../utils/format-date");
 class AuthController {
   //[GET] /user/all
   async getAll(req, res) {
@@ -68,7 +68,9 @@ class AuthController {
       }
       console.log(createdUser);
       const returnPro = _.omit(createdUser.toObject(), ["password", "age"]);
-      returnPro.age = formatToDate(createdUser.age);
+      returnPro.age
+        ? (returnPro.age = formatToDate(createdUser.age))
+        : (returnPro.age = "");
       return res.status(200).json(response(true, returnPro));
     } catch (err) {
       console.log(err);
@@ -105,7 +107,9 @@ class AuthController {
         { expiresIn: "30d" }
       );
       const returnPro = _.omit(foundUser.toObject(), ["password", "age"]);
-      returnPro.age = formatToDate(foundUser.age);
+      returnPro.age
+        ? (returnPro.age = formatToDate(foundUser.age))
+        : (returnPro.age = "");
       return res.status(200).json(response(true, returnPro, jwtoken));
     } catch (error) {
       console.log(error);
@@ -155,7 +159,9 @@ class AuthController {
     if (!profile) return res.status(404).json({ status: false });
 
     const returnPro = _.omit(profile.toObject(), ["password", "age"]);
-    returnPro.age = formatToDate(profile.age);
+    returnPro.age
+      ? (returnPro.age = formatToDate(profile.age))
+      : (returnPro.age = "");
 
     return res.status(200).json(response(true, returnPro));
   }
@@ -168,13 +174,17 @@ class AuthController {
       const profile = await User.findById(userId);
       if (!profile) return res.status(404).json({ status: false });
       const returnPro = _.omit(profile.toObject(), ["password", "age"]);
-      returnPro.age = formatToDate(profile.age);
+      returnPro.age
+        ? (returnPro.age = formatToDate(anotherProfile.age))
+        : (returnPro.age = "");
       return res.status(200).json(response(true, returnPro));
     }
     const anotherProfile = await User.findById(anotherId);
     if (!anotherProfile) return res.status(404).json({ status: false });
     const returnPro = _.omit(anotherProfile.toObject(), ["password", "age"]);
-    returnPro.age = formatToDate(anotherProfile.age);
+    returnPro.age
+      ? (returnPro.age = formatToDate(updated.age))
+      : (returnPro.age = "");
     console.log(returnPro);
     return res.status(200).json(response(true, returnPro));
   }
