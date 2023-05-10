@@ -206,18 +206,24 @@ class PhotoController {
     }
 
     try {
-      const dataToInsert = { user_id: userId, comment: comment };
+      const dataToInsert = {
+        user_id: userId,
+        comment: comment,
+        comment_time: Date.now(),
+      };
       const addComment = await Comments.findOneAndUpdate(
         {
           post_id: postId,
         },
         {
           $push: { comments: dataToInsert },
-        }
+        },
+        { new: true }
       );
       const totalComments = await Photo.findByIdAndUpdate(postId, {
         $inc: { total_comment: 1 },
       });
+      console.log(addComment);
       return res.status(200).json({ status: true });
     } catch (error) {
       console.log("add comment failed: ", error);
@@ -242,6 +248,7 @@ class PhotoController {
 
     foundComments.comments = _.map(foundComments.comments, (item) => {
       const countTime = countTimes(item.comment_time);
+      console.log(countTime);
       let statusTime;
       if (countTime.minutes === 0) {
         statusTime = "Vừa xong";
