@@ -183,7 +183,7 @@ class AuthController {
     if (!anotherProfile) return res.status(404).json({ status: false });
     const returnPro = _.omit(anotherProfile.toObject(), ["password", "age"]);
     anotherProfile.age
-      ? (returnPro.age = formatToDate(updated.age))
+      ? (returnPro.age = formatToDate(anotherProfile.age))
       : (returnPro.age = "");
     console.log(returnPro);
     return res.status(200).json(response(true, returnPro));
