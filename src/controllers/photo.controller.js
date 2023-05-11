@@ -97,6 +97,7 @@ class PhotoController {
 
     return res.status(200).json({ status: true, listPhotos: listPhoto });
   };
+
   // Create New Post/Photo
   createPost = async (req, res) => {
     const userId = res.locals.payload.id;
@@ -122,6 +123,38 @@ class PhotoController {
     return res.status(200).json(response(true, newPhoto));
   };
 
+  // Upadte Post
+  updatePost = async (req, res) => {
+    const postId = req.body.postId;
+    const validateFieldUpdate = _.keys(req.body);
+    const dontField = [
+      "isAvatar",
+      "photo_path",
+      "total_likes",
+      "list_likes",
+      "liked",
+      "total_comment",
+      "user_id",
+    ];
+    for (let i = 0; i < validateFieldUpdate.length; i++) {
+      if (_.includes(dontField, validateFieldUpdate[i].toString())) {
+        return res.status(400).json({
+          status: false,
+          message: `Dont change field: ${validateFieldUpdate[i]}`,
+        });
+      }
+    }
+    const modifyFields = _.omit(req.body, ["postId"]);
+    try {
+      const updated = await Photo.findByIdAndUpdate(postId, modifyFields, {
+        new: true,
+      });
+      return res.status(200).json({ status: true });
+    } catch (err) {
+      console.log(err);
+      return res.status(400).json({ status: false });
+    }
+  };
   //[POST like post]
   likePost = async (req, res) => {
     const userId = res.locals.payload.id;
