@@ -28,4 +28,20 @@ function countTimes(created) {
   };
 }
 
-module.exports = { formatToDate, countTimes };
+function formatTimeUpload(doTime) {
+  const countTime = countTimes(doTime);
+  let res = "";
+  if (countTime.minutes === 0) {
+    res = "Vừa xong";
+  } else if (countTime.minutes > 0 && countTime.hours === 0) {
+    res = `${countTime.minutes} phút trước`;
+  } else if (countTime.hours > 0 && countTime.dates === 0) {
+    res = `${countTime.hours} tiếng trước`;
+  } else if (countTime.dates > 0 && countTime.weeks === 0) {
+    res = `${countTime.dates} ngày trước`;
+  } else {
+    res = `${countTime.weeks} tuần trước`;
+  }
+  return res;
+}
+module.exports = { formatToDate, countTimes, formatTimeUpload };

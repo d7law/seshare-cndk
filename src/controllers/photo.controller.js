@@ -6,7 +6,7 @@ const path = require("path");
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const { makeRandom } = require("../utils/format-text");
-const { countTimes } = require("../utils/format-date");
+const { countTimes, formatTimeUpload } = require("../utils/format-date");
 var response = require("../models/ResponseModel").response;
 
 class PhotoController {
@@ -47,10 +47,12 @@ class PhotoController {
 
     //check liked
     listPhoto.forEach((x) => {
-      const listLikeOfThisPost = _.map(x.list_likes, (item) => item.toString());
+      const listLikeOfThisPost = _.map(x.list_likes, (item) => {
+        item.toString();
+      });
       const isLike = _.includes(listLikeOfThisPost, userId);
       if (isLike) x.liked = true;
-      console.log(x);
+      x.uploadAt = formatTimeUpload(x.uploadAt);
     });
 
     return res.status(200).json(response(true, listPhoto));
@@ -247,20 +249,7 @@ class PhotoController {
     }
 
     foundComments.comments = _.map(foundComments.comments, (item) => {
-      const countTime = countTimes(item.comment_time);
-      console.log(countTime);
-      let statusTime;
-      if (countTime.minutes === 0) {
-        statusTime = "Vừa xong";
-      } else if (countTime.minutes > 0 && countTime.hours === 0) {
-        statusTime = `${countTime.minutes} phút trước`;
-      } else if (countTime.hours > 0 && countTime.dates === 0) {
-        statusTime = `${countTime.hours} tiếng trước`;
-      } else if (countTime.dates > 0 && countTime.weeks === 0) {
-        statusTime = `${countTime.dates} ngày trước`;
-      } else {
-        statusTime = `${countTime.weeks} tuần trước`;
-      }
+      const statusTime = formatTimeUpload(item.comment_time);
       return {
         user: item.user_id,
         comment: item.comment,
