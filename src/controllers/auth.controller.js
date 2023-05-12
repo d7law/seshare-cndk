@@ -162,7 +162,7 @@ class AuthController {
     profile.age
       ? (returnPro.age = formatToDate(profile.age))
       : (returnPro.age = "");
-
+    returnPro.createdAt = formatToDate(profile.createdAt);
     return res.status(200).json(response(true, returnPro));
   }
 
