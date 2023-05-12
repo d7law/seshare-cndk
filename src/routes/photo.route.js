@@ -18,6 +18,8 @@ photoRoute.post("/photo/get-list-all-photos", photoController.getListAllPhoto);
 
 photoRoute.post("/photo/upload-post", photoController.createPost);
 photoRoute.post("/photo/update-post", photoController.updatePost);
+photoRoute.post("/photo/delete-post", photoController.deletePost);
+
 photoRoute.post(
   "/photo/upload",
   upload.single("photo"),

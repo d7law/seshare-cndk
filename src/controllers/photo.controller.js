@@ -159,6 +159,34 @@ class PhotoController {
       return res.status(400).json({ status: false });
     }
   };
+
+  // DELETE post
+  deletePost = async (req, res) => {
+    const userId = res.locals.payload.id;
+    const postId = req.body.postId;
+    const findPost = await Photo.findById(postId);
+    if (!findPost) {
+      return res.status(400).json({ status: false, message: "postId đểu" });
+    }
+    if (userId != findPost.user_id.toString()) {
+      return res.status(403).json({
+        status: false,
+        message: "Ôi bạn đâu phải chủ post này mà đòi xóa?",
+      });
+    }
+    try {
+      const deletedPost = await Photo.findByIdAndDelete(postId);
+
+      const deletedComment = await Comments.findOneAndDelete({
+        post_id: postId,
+      });
+      console.log(deletedPost);
+      return res.status(200).json({ status: true });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ status: false });
+    }
+  };
   //[POST like post]
   likePost = async (req, res) => {
     const userId = res.locals.payload.id;
