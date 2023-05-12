@@ -48,10 +48,14 @@ class PhotoController {
     //check liked
     listPhoto.forEach((x) => {
       const listLikeOfThisPost = _.map(x.list_likes, (item) => {
-        item.toString();
+        return item.toString();
       });
       const isLike = _.includes(listLikeOfThisPost, userId);
-      if (isLike) x.liked = true;
+
+      console.log(listLikeOfThisPost);
+      if (isLike) {
+        x.liked = true;
+      }
       x.uploadAt = formatTimeUpload(x.uploadAt);
     });
 
