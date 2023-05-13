@@ -297,6 +297,11 @@ class PhotoController {
       return res.status(503).json({ status: false });
     }
   };
+  
+  // Delete Comment
+  deleteComment = async(req, res)=>{
+    
+  } 
 
   // Show list comments of post
   getListCommentOfPost = async (req, res) => {
