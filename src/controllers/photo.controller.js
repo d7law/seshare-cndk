@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const { makeRandom } = require("../utils/format-text");
 const { countTimes, formatTimeUpload } = require("../utils/format-date");
+const { $where } = require("../models/User");
 var response = require("../models/ResponseModel").response;
 
 class PhotoController {
@@ -297,14 +298,35 @@ class PhotoController {
       return res.status(503).json({ status: false });
     }
   };
-  
+
   // Delete Comment
-  deleteComment = async(req, res)=>{
-    
-  } 
+  deleteComment = async (req, res) => {
+    const userId = res.locals.payload.id;
+    const commentId = req.body.commentId;
+    const postId = req.body.postId;
+
+    try {
+      const deleted = await Comments.findOneAndUpdate(
+        { post_id: postId },
+        {
+          $pull: { comments: { _id: commentId } },
+        }
+      );
+      if (deleted) {
+        const incTotalcmt = await Photo.findByIdAndUpdate(postId, {
+          $inc: { total_comment: -1 },
+        });
+      }
+      return res.status(200).json({ status: true });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ status: false });
+    }
+  };
 
   // Show list comments of post
   getListCommentOfPost = async (req, res) => {
+    const userId = res.locals.payload.id;
     const postId = req.body.postId;
 
     let foundComments = await Comments.findOne({ post_id: postId })
@@ -320,10 +342,14 @@ class PhotoController {
 
     foundComments.comments = _.map(foundComments.comments, (item) => {
       const statusTime = formatTimeUpload(item.comment_time);
+      const is_commented = userId == item.user_id._id.toString() ? true : false;
+      console.log(is_commented, userId, item.user_id);
       return {
+        _id: item._id,
         user: item.user_id,
         comment: item.comment,
         comment_time: statusTime,
+        is_commented: is_commented,
       };
     });
     return res.status(200).json({

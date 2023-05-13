@@ -8,6 +8,10 @@ const commentSchema = new Schema({
   },
   comments: [
     {
+      _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        default: new mongoose.Types.ObjectId(),
+      },
       user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
