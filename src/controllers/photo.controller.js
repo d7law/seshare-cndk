@@ -302,8 +302,8 @@ class PhotoController {
   // Delete Comment
   deleteComment = async (req, res) => {
     const userId = res.locals.payload.id;
-    const commentId = req.body.commentId;
     const postId = req.body.postId;
+    const commentId = req.body.commentId;
 
     try {
       const deleted = await Comments.findOneAndUpdate(
@@ -317,6 +317,28 @@ class PhotoController {
           $inc: { total_comment: -1 },
         });
       }
+      return res.status(200).json({ status: true });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ status: false });
+    }
+  };
+
+  // Update comment
+  updateComment = async (req, res) => {
+    const userId = res.locals.payload.id;
+    const postId = req.body.postId;
+    const commentId = req.body.commentId;
+    const newComment = req.body.newComment;
+
+    try {
+      const updated = await Comments.findOneAndUpdate(
+        { post_id: postId, "comments._id": commentId },
+        {
+          $set: { "comments.$.comment": newComment },
+        },
+        { new: true }
+      );
       return res.status(200).json({ status: true });
     } catch (error) {
       console.log(error);
