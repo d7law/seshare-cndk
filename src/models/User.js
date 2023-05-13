@@ -16,8 +16,8 @@ const userSchema = new Schema(
     },
     gender: {
       type: String,
-      enum: ["Male", "Female", "Other"],
-      default: "Other",
+      enum: ["Nam", "Nữ", "Khác"],
+      default: "Khác",
     },
     first_name: {
       type: String,
@@ -30,6 +30,7 @@ const userSchema = new Schema(
     },
     place: {
       type: String,
+      default: "",
     },
     avatar_path: {
       type: String,
