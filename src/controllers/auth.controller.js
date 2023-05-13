@@ -50,6 +50,7 @@ class AuthController {
         age: req.body.age,
         avatar_path: req.body.avatar,
         bio: "",
+        place: req.body.place,
       };
       const newUser = new User(data);
       const createdUser = await newUser.save();
