@@ -80,7 +80,7 @@ class StoryController {
   };
 
   //Get stories
-  getListStories = async (req, res) => {
+  homePageListStories = async (req, res) => {
     const userId = res.locals.payload.id;
     //update over 24h
     const updateOverStory = await Story.find({});
@@ -146,6 +146,29 @@ class StoryController {
       console.log(error);
       return res.status(400).json({ status: false });
     }
+  };
+
+  // get My Favorite story
+  getFavorite = async (req, res) => {
+    const userId = res.locals.payload.id;
+    const { anotherId } = req.body;
+
+    const favorite = await Story.find({
+      user: anotherId,
+      is_favorite: true,
+    }).lean();
+    const values = _.map(favorite, (e) => ({
+      ...e,
+      upload_time: formatTimeUpload(e.createdAt),
+    }));
+
+    return userId === anotherId
+      ? res
+          .status(200)
+          .json(response(true, { stories: values, is_your_stories: true }))
+      : res
+          .status(200)
+          .json(response(false, { stories: values, is_your_stories: false }));
   };
 }
 
