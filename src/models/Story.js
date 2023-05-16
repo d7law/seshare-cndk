@@ -18,6 +18,11 @@ const storySchema = new Schema(
       required: false,
       default: 0,
     },
+    scale_text: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
     color_text: {
       type: String,
       require: false,
