@@ -128,6 +128,25 @@ class StoryController {
 
     return res.status(200).json(response(true, result));
   };
+
+  updateFavorite = async (req, res) => {
+    const userId = res.locals.payload.id;
+    const { storyId } = req.body;
+
+    let story = await Story.findById(storyId);
+    if (story.user._id != userId)
+      return res
+        .status(403)
+        .json({ status: false, message: "Ban ko co quyen de lam cai nay dau" });
+    try {
+      story.is_favorite = story.is_favorite ? false : true;
+      await story.save();
+      return res.status(200).json({ status: true });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ status: false });
+    }
+  };
 }
 
 module.exports = new StoryController();
