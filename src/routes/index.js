@@ -7,6 +7,7 @@ const { upload } = require("../services/upload.service");
 const photoController = require("../controllers/photo.controller");
 const resize = require("../utils/resize");
 const path = require("path");
+const storyRoute = require("./story.route");
 
 function initRouter(app) {
   /*
@@ -63,6 +64,7 @@ function initRouter(app) {
   app.use("/api", userRoute);
   app.use("/api", friendRoute);
   app.use("/api", photoRoute);
+  app.use("/api", storyRoute);
 }
 
 module.exports = initRouter;
