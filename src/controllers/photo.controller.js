@@ -63,7 +63,7 @@ class PhotoController {
     return res.status(200).json(response(true, listPhoto));
   };
   //Get all Photo of user
-  getPhoto = async (req, res) => {
+  getListAllPost = async (req, res) => {
     const userId = res.locals.payload.id;
 
     const photos = await Photo.find({ user_id: userId });

@@ -8,7 +8,6 @@ photoRoute.post(
   checkToken,
   photoController.homePagePosts
 );
-photoRoute.post("/photo/get-photo-user", photoController.getPhoto);
 photoRoute.post("/photo/get-list-photos-user", photoController.getListPhoto);
 photoRoute.post(
   "/photo/get-list-photos-another-user",
@@ -16,6 +15,7 @@ photoRoute.post(
 );
 photoRoute.post("/photo/get-list-all-photos", photoController.getListAllPhoto);
 
+photoRoute.post("/photo/get-list-all-posts", photoController.getListAllPost);
 photoRoute.post("/photo/upload-post", photoController.createPost);
 photoRoute.post("/photo/update-post", photoController.updatePost);
 photoRoute.post("/photo/delete-post", photoController.deletePost);
