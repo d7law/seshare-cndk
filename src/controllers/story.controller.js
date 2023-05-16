@@ -94,15 +94,23 @@ class StoryController {
     const matchedItems = [];
     const remainingItems = [];
     values.forEach((x) => {
-      if (x.user._id == userId) {
+      if (x.user._id == userId && !_.isEmpty(x.story)) {
         matchedItems.push(x);
-      } else {
+      } else if (x.user._id != userId && !_.isEmpty(x.story)) {
         remainingItems.push(x);
       }
     });
 
     const shuffledRemainingItems = _.shuffle(remainingItems);
-    const result = matchedItems.concat(shuffledRemainingItems);
+    const result = matchedItems
+      .map((x) => {
+        return { ...x, is_your_stories: true };
+      })
+      .concat(
+        shuffledRemainingItems.map((x) => {
+          return { ...x, is_your_stories: false };
+        })
+      );
 
     return res.status(200).json(response(true, result));
   };
