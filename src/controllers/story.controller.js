@@ -47,6 +47,26 @@ class StoryController {
     }
   };
 
+  //Delete story
+  deleteStory = async (req, res) => {
+    const userId = res.locals.payload.id;
+    const storyId = req.body.storyId;
+
+    try {
+      const deletedFromList = await ListStories.findOneAndUpdate(
+        { user: userId },
+        {
+          $pull: { story: storyId },
+        }
+      );
+      const deletedStory = await Story.findByIdAndDelete(storyId);
+      return res.status(200).json({ status: true });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ status: false });
+    }
+  };
+
   //Get stories
   getListStories = async (req, res) => {
     //update over 24h

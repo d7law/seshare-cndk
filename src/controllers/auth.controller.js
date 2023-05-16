@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Photo = require("../models/Photo");
+const Story = require("../models/Story");
 const _ = require("lodash");
 const path = require("path");
 const fs = require("fs");
@@ -210,9 +211,9 @@ class AuthController {
 
   //[POST] delete field
   deleteField = async (req, res) => {
-    const users = await User.find();
+    const users = await Story.find();
     users.forEach(async (x) => {
-      await User.updateOne({ _id: x._id }, { $unset: { photos: 1 } });
+      await Story.updateOne({ _id: x._id }, { $unset: { text: 1 } });
     });
     return res.json("ok");
   };
