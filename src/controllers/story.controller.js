@@ -68,6 +68,17 @@ class StoryController {
     }
   };
 
+  //Get My Stories
+  getMyStories = async (req, res) => {
+    const userId = res.locals.payload.id;
+    const myStories = await Story.find({ user: userId }).lean();
+    const values = myStories.map((x) => ({
+      ...x,
+      upload_time: formatTimeUpload(x.createdAt),
+    }));
+    return res.status(200).json(response(true, values));
+  };
+
   //Get stories
   getListStories = async (req, res) => {
     const userId = res.locals.payload.id;

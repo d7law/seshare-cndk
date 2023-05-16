@@ -26,6 +26,10 @@ const storySchema = new Schema(
       type: String,
       default: formatTimeUpload(Date.now()),
     },
+    is_favorite: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
