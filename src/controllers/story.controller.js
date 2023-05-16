@@ -86,7 +86,7 @@ class StoryController {
 
     const values = allStories.map((e) => {
       const story = e.story
-        .filter((s) => !s.is_over && s.privacy == "public")
+        .filter((s) => !s.is_over)
         .map((s) => ({ ...s, upload_time: formatTimeUpload(s.createdAt) }));
       return { ...e, story };
     });
@@ -108,7 +108,10 @@ class StoryController {
       })
       .concat(
         shuffledRemainingItems.map((x) => {
-          return { ...x, is_your_stories: false };
+          const story = x.story
+            .filter((s) => s.privacy === "public")
+            .map((s) => ({ ...s }));
+          return { ...x, story: story, is_your_stories: false };
         })
       );
 
