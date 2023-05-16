@@ -44,4 +44,17 @@ function formatTimeUpload(doTime) {
   }
   return res;
 }
-module.exports = { formatToDate, countTimes, formatTimeUpload };
+
+function isOver24Hours(doTime) {
+  const countTime = countTimes(doTime);
+  if (countTime.hours <= 24) {
+    return true;
+  }
+  return false;
+}
+module.exports = {
+  formatToDate,
+  countTimes,
+  formatTimeUpload,
+  isOver24Hours,
+};

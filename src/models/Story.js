@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { formatTimeUpload } = require("../utils/format-date");
 const Schema = mongoose.Schema;
 
 const storySchema = new Schema(
@@ -40,6 +41,10 @@ const storySchema = new Schema(
     is_over: {
       type: Boolean,
       default: false,
+    },
+    upload_time: {
+      type: String,
+      default: formatTimeUpload(Date.now()),
     },
   },
   { timestamps: true }

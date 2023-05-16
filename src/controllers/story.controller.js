@@ -1,6 +1,8 @@
 const Story = require("../models/Story");
 const ListStories = require("../models/ListStories");
+const _ = require("lodash");
 const { response } = require("../models/ResponseModel");
+const { formatTimeUpload, isOver24Hours } = require("../utils/format-date");
 
 class StoryController {
   //Create Story
@@ -47,6 +49,30 @@ class StoryController {
       console.log(error);
       return res.status(400).json(response(false));
     }
+  };
+
+  //Get stories
+  getListStories = async (req, res) => {
+    //update over 24h
+    const updateOverStory = await Story.find({});
+    _.forEach(updateOverStory, async (x) => {
+      if (!isOver24Hours(x.createdAt)) {
+        await Story.findByIdAndUpdate(x._id, { $set: { is_over: true } });
+      }
+    });
+
+    const allStories = await ListStories.find()
+      .lean()
+      .populate("user", "_id, full_name avatar_path")
+      .populate("story");
+
+    const values = allStories.map((e) => {
+      const story = e.story
+        .filter((s) => !s.is_over)
+        .map((s) => ({ ...s, upload_time: formatTimeUpload(s.createdAt) }));
+      return { ...e, story };
+    });
+    return res.status(200).json(response(true, values));
   };
 }
 
