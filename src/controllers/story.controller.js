@@ -3,6 +3,7 @@ const ListStories = require("../models/ListStories");
 const _ = require("lodash");
 const { response } = require("../models/ResponseModel");
 const { formatTimeUpload, isOver24Hours } = require("../utils/format-date");
+const { default: mongoose } = require("mongoose");
 
 class StoryController {
   //Create Story
@@ -69,6 +70,7 @@ class StoryController {
 
   //Get stories
   getListStories = async (req, res) => {
+    const userId = res.locals.payload.id;
     //update over 24h
     const updateOverStory = await Story.find({});
     _.forEach(updateOverStory, async (x) => {
@@ -84,11 +86,25 @@ class StoryController {
 
     const values = allStories.map((e) => {
       const story = e.story
-        .filter((s) => !s.is_over)
+        .filter((s) => !s.is_over && s.privacy == "public")
         .map((s) => ({ ...s, upload_time: formatTimeUpload(s.createdAt) }));
       return { ...e, story };
     });
-    return res.status(200).json(response(true, values));
+
+    const matchedItems = [];
+    const remainingItems = [];
+    values.forEach((x) => {
+      if (x.user._id == userId) {
+        matchedItems.push(x);
+      } else {
+        remainingItems.push(x);
+      }
+    });
+
+    const shuffledRemainingItems = _.shuffle(remainingItems);
+    const result = matchedItems.concat(shuffledRemainingItems);
+
+    return res.status(200).json(response(true, result));
   };
 }
 
