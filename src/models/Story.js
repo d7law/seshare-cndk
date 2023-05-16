@@ -8,31 +8,6 @@ const storySchema = new Schema(
       type: String,
       required: true,
     },
-    x_text: {
-      type: Number,
-      required: false,
-      default: 0,
-    },
-    y_text: {
-      type: Number,
-      required: false,
-      default: 0,
-    },
-    scale_text: {
-      type: Number,
-      required: false,
-      default: 0,
-    },
-    color_text: {
-      type: String,
-      require: false,
-      default: "0xFFFFFF",
-    },
-    text: {
-      type: String,
-      required: false,
-      default: "",
-    },
     privacy: {
       type: String,
       enum: ["public", "private"],

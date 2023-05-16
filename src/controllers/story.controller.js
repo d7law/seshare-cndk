@@ -11,11 +11,6 @@ class StoryController {
     const inputData = req.body;
     const data = {
       photo_path: inputData.photoPath,
-      x_text: inputData.xText,
-      y_text: inputData.yText,
-      color_text: inputData.colorText,
-      scale_text: inputData.scaleText,
-      text: inputData.text,
       privacy: inputData.privacy,
       user: userId,
     };
