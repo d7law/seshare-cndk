@@ -15,7 +15,11 @@ photoRoute.post(
 );
 photoRoute.post("/photo/get-list-all-photos", photoController.getListAllPhoto);
 
-photoRoute.post("/photo/get-list-all-posts", photoController.getListAllPost);
+photoRoute.post("/photo/get-list-my-posts", photoController.getListAllMyPost);
+photoRoute.post(
+  "/photo/get-list-another-posts",
+  photoController.getListAllAnotherPost
+);
 photoRoute.post("/photo/upload-post", photoController.createPost);
 photoRoute.post("/photo/update-post", photoController.updatePost);
 photoRoute.post("/photo/delete-post", photoController.deletePost);

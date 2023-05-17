@@ -62,13 +62,68 @@ class PhotoController {
 
     return res.status(200).json(response(true, listPhoto));
   };
-  //Get all Photo of user
-  getListAllPost = async (req, res) => {
+  //Get all Posts of user
+  getListAllMyPost = async (req, res) => {
     const userId = res.locals.payload.id;
-    const anotherId = req.body
+    let listPhoto = await Photo.find({ user_id: userId })
+      .lean()
+      .populate("user_id", "avatar_path full_name")
+      .sort({ uploadAt: -1 });
 
-    const photos = await Photo.find({ user_id: userId });
-    res.status(200).json(response(true, photos));
+    if (!listPhoto || listPhoto.length < 1)
+      return res.status(404).json(response(false, listPhoto));
+
+    //check liked
+    listPhoto.forEach((x) => {
+      const listLikeOfThisPost = _.map(x.list_likes, (item) => {
+        return item.toString();
+      });
+      const isLike = _.includes(listLikeOfThisPost, userId);
+
+      console.log(listLikeOfThisPost);
+      if (isLike) {
+        x.liked = true;
+      }
+      x.uploadAt = formatTimeUpload(x.uploadAt);
+    });
+
+    return res.status(200).json(response(true, listPhoto));
+  };
+
+  //Get all Posts of user
+  getListAllAnotherPost = async (req, res) => {
+    const userId = res.locals.payload.id;
+    const anotherId = req.body.anotherId;
+    let listPhoto;
+    if (userId == anotherId) {
+      listPhoto = await Photo.find({ user_id: anotherId })
+        .lean()
+        .populate("user_id", "avatar_path full_name")
+        .sort({ uploadAt: -1 });
+    } else {
+      listPhoto = await Photo.find({ user_id: anotherId, privacy: "public" })
+        .lean()
+        .populate("user_id", "avatar_path full_name")
+        .sort({ uploadAt: -1 });
+    }
+    if (!listPhoto || listPhoto.length < 1)
+      return res.status(404).json(response(false, listPhoto));
+
+    //check liked
+    listPhoto.forEach((x) => {
+      const listLikeOfThisPost = _.map(x.list_likes, (item) => {
+        return item.toString();
+      });
+      const isLike = _.includes(listLikeOfThisPost, userId);
+
+      console.log(listLikeOfThisPost);
+      if (isLike) {
+        x.liked = true;
+      }
+      x.uploadAt = formatTimeUpload(x.uploadAt);
+    });
+
+    return res.status(200).json(response(true, listPhoto));
   };
   //Get list Photo of user
   getListPhoto = async (req, res) => {
