@@ -10,6 +10,10 @@ storyRoute.post("/story/all-my-stories", storyController.getMyStories);
 storyRoute.post("/story/create-story", storyController.createStory);
 storyRoute.post("/story/delete-story", storyController.deleteStory);
 storyRoute.post("/story/update-favorite", storyController.updateFavorite);
-storyRoute.post("/story/get-favorite", storyController.getFavorite);
+storyRoute.post("/story/get-my-favorite", storyController.getMyFavorite);
+storyRoute.post(
+  "/story/get-another-favorite",
+  storyController.getAnotherFavorite
+);
 
 module.exports = storyRoute;

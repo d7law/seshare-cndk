@@ -71,7 +71,9 @@ class StoryController {
   //Get My Stories
   getMyStories = async (req, res) => {
     const userId = res.locals.payload.id;
-    const myStories = await Story.find({ user: userId }).lean();
+    const myStories = await Story.find({ user: userId })
+      .lean()
+      .populate("user", "_id, full_name avatar_path");
     const values = myStories.map((x) => ({
       ...x,
       upload_time: formatTimeUpload(x.createdAt),
@@ -149,14 +151,36 @@ class StoryController {
   };
 
   // get My Favorite story
-  getFavorite = async (req, res) => {
+  getMyFavorite = async (req, res) => {
+    const userId = res.locals.payload.id;
+
+    const favorite = await Story.find({
+      user: new mongoose.Types.ObjectId(userId),
+      is_favorite: true,
+    })
+      .lean()
+      .populate("user", "_id, full_name avatar_path");
+    const values = _.map(favorite, (e) => ({
+      ...e,
+      upload_time: formatTimeUpload(e.createdAt),
+    }));
+
+    res
+      .status(200)
+      .json(response(true, { stories: values, is_your_stories: true }));
+  };
+
+  // get another story
+  getAnotherFavorite = async (req, res) => {
     const userId = res.locals.payload.id;
     const { anotherId } = req.body;
 
     const favorite = await Story.find({
       user: anotherId,
       is_favorite: true,
-    }).lean();
+    })
+      .lean()
+      .populate("user", "_id, full_name avatar_path");
     const values = _.map(favorite, (e) => ({
       ...e,
       upload_time: formatTimeUpload(e.createdAt),
