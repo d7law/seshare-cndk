@@ -168,7 +168,7 @@ class StoryController {
           .json(response(true, { stories: values, is_your_stories: true }))
       : res
           .status(200)
-          .json(response(false, { stories: values, is_your_stories: false }));
+          .json(response(true, { stories: values, is_your_stories: false }));
   };
 }
 
