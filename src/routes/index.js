@@ -8,6 +8,7 @@ const photoController = require("../controllers/photo.controller");
 const resize = require("../utils/resize");
 const path = require("path");
 const storyRoute = require("./story.route");
+const filterController = require("../controllers/filter.controller");
 
 function initRouter(app) {
   /*
@@ -55,6 +56,7 @@ function initRouter(app) {
     upload.single("photo"),
     photoController.uploadPhoto
   );
+  app.use("/api/filter/search", filterController.searchUser);
 
   app.use("/api/forgot-password", authController.forgotPsw);
   app.use("/api/check-phone", authController.checkPhone);
