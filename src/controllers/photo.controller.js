@@ -47,13 +47,13 @@ class PhotoController {
       return res.status(404).json(response(false, listPhoto));
 
     //check liked
-    listPhoto.forEach((x) => {
+    listPhoto.forEach(async (x) => {
       const listLikeOfThisPost = _.map(x.list_likes, (item) => {
         return item.toString();
       });
       const isLike = _.includes(listLikeOfThisPost, userId);
-
-      console.log(listLikeOfThisPost);
+      const countCmt = await Comments.findOne({ post_id: x._id });
+      x.total_comment = countCmt.comments.length;
       if (isLike) {
         x.liked = true;
       }
