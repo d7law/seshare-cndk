@@ -52,12 +52,16 @@ class PhotoController {
         return item.toString();
       });
       const isLike = _.includes(listLikeOfThisPost, userId);
+      x.uploadAt = formatTimeUpload(x.uploadAt);
       const countCmt = await Comments.findOne({ post_id: x._id });
-      x.total_comment = countCmt.comments.length;
+      if (!countCmt) {
+        x.total_comment = 0;
+      } else {
+        x.total_comment = countCmt.comments.length;
+      }
       if (isLike) {
         x.liked = true;
       }
-      x.uploadAt = formatTimeUpload(x.uploadAt);
     });
 
     return res.status(200).json(response(true, listPhoto));
