@@ -27,6 +27,6 @@ const friendSchema = new Schema(
   },
   { timestamps: true }
 );
-const Model = mongoose.model("Friends", friendSchema);
+const Model = mongoose.model("Friend", friendSchema);
 Model.createCollection();
 module.exports = Model;

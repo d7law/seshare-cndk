@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const Photo = require("../models/Photo");
 const Story = require("../models/Story");
+const Friend = require("../models/Friend");
 const _ = require("lodash");
 const path = require("path");
 const fs = require("fs");
@@ -10,6 +11,7 @@ const { makeRandom } = require("../utils/format-text");
 const { formatToDate, countMinutes } = require("../utils/format-date");
 const sendSMS = require("../services/send-otp.service");
 const otp = require("../utils/generate-otp");
+const { default: mongoose } = require("mongoose");
 class AuthController {
   // requireOtp
   async requireOtp(req, res) {
@@ -196,7 +198,17 @@ class AuthController {
     anotherProfile.age
       ? (returnPro.age = formatToDate(anotherProfile.age))
       : (returnPro.age = "");
-    console.log(returnPro);
+
+    //check status friend
+    const checkFriend = await Friend.findOne({
+      recipient_id: new mongoose.Types.ObjectId(anotherId),
+      requester_id: new mongoose.Types.ObjectId(userId),
+    })
+      .lean()
+      .select("status");
+    console.log(checkFriend);
+    returnPro.friendStatus =
+      !checkFriend || !checkFriend.status ? 0 : checkFriend.status;
     return res.status(200).json(response(true, returnPro));
   }
 
@@ -271,7 +283,9 @@ class AuthController {
   };
 
   //get all user to search
-  searchingUser = async (req, res) => {};
+  searchingUser = async (req, res) => {
+
+  };
 }
 
 module.exports = new AuthController();
