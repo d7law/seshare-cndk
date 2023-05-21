@@ -8,7 +8,17 @@ const jwt = require("jsonwebtoken");
 var response = require("../models/ResponseModel").authResponse;
 const { makeRandom } = require("../utils/format-text");
 const { formatToDate, countMinutes } = require("../utils/format-date");
+const sendSMS = require("../services/send-otp.service");
+const otp = require("../utils/generate-otp");
 class AuthController {
+  // requireOtp
+  async requireOtp(req, res) {
+    const phone = req.body.phone;
+    const newOtp = otp();
+    const sendOtp = sendSMS(phone, newOtp, 4, "");
+    console.log(sendOtp);
+  }
+
   //[GET] /user/all
   async getAll(req, res) {
     try {

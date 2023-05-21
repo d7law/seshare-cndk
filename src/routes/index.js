@@ -49,6 +49,9 @@ function initRouter(app) {
     ).pipe(res);
   });
 
+  //send otp
+  app.use('/api/require-otp', authController.requireOtp)
+
   app.use("/api/login", authController.logIn);
   app.use("/api/sign-up", upload.single("avatar"), authController.signUp);
   app.post(
