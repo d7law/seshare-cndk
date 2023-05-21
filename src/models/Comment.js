@@ -11,6 +11,7 @@ const commentSchema = new Schema({
       _id: {
         type: mongoose.Schema.Types.ObjectId,
         default: new mongoose.Types.ObjectId(),
+        unique: true,
       },
       user_id: {
         type: mongoose.Schema.Types.ObjectId,
