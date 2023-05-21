@@ -8,6 +8,7 @@ const _ = require("lodash");
 const { makeRandom } = require("../utils/format-text");
 const { countTimes, formatTimeUpload } = require("../utils/format-date");
 const { $where } = require("../models/User");
+const { default: mongoose } = require("mongoose");
 var response = require("../models/ResponseModel").response;
 
 class PhotoController {
@@ -335,6 +336,7 @@ class PhotoController {
 
     try {
       const dataToInsert = {
+        _id: new mongoose.Types.ObjectId(),
         user_id: userId,
         comment: comment,
         comment_time: Date.now(),
