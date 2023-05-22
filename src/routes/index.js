@@ -40,17 +40,21 @@ function initRouter(app) {
       height = parseInt(parseFloat(heightStr).toFixed());
     }
     res.type(`image/${format || "png"}`);
-    resize(
-      path.join(__dirname, "..", "uploads", pathStr),
-      format,
-      width,
-      height,
-      fit
-    ).pipe(res);
+    try {
+      resize(
+        path.join(__dirname, "..", "uploads", pathStr),
+        format,
+        width,
+        height,
+        fit
+      ).pipe(res);
+    } catch (err) {
+      res.sendStatus(404);
+    }
   });
 
   //send otp
-  app.use('/api/require-otp', authController.requireOtp)
+  app.use("/api/require-otp", authController.requireOtp);
 
   app.use("/api/login", authController.logIn);
   app.use("/api/sign-up", upload.single("avatar"), authController.signUp);
