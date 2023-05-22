@@ -160,9 +160,7 @@ class FriendController {
         .lean()
         .select("recipient_id")
         .populate("recipient_id", "_id avatar_path full_name bio");
-      return res
-        .status(200)
-        .json(_.map(friends, (x) => ({ user: x.recipient_id })));
+      return res.status(200).json(response(true, friends));
     } catch (error) {
       console.log(error);
       return res.status(400).json({ status: false });
