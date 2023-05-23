@@ -15,10 +15,10 @@ class FriendController {
       })
         .lean()
         .populate("recipient_id", "_id avatar_path full_name bio");
-      return res.json(friends);
+      return res.json(response(true, friends));
     } catch (error) {
       console.log(error);
-      return res.status(503).json("Loi server");
+      return res.status(503).json({ status: false });
     }
   }
   //[GET] /friends/requested/

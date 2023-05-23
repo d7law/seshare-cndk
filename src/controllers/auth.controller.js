@@ -81,7 +81,11 @@ class AuthController {
         });
       }
       console.log(createdUser);
-      const returnPro = _.omit(createdUser.toObject(), ["password", "age"]);
+      const returnPro = _.omit(createdUser.toObject(), [
+        "password",
+        "age",
+        "friends",
+      ]);
       createdUser.age
         ? (returnPro.age = formatToDate(createdUser.age))
         : (returnPro.age = "");
@@ -120,7 +124,11 @@ class AuthController {
         process.env.JWT_SECRET,
         { expiresIn: "30d" }
       );
-      const returnPro = _.omit(foundUser.toObject(), ["password", "age"]);
+      const returnPro = _.omit(foundUser.toObject(), [
+        "password",
+        "age",
+        "friends",
+      ]);
       foundUser.age
         ? (returnPro.age = formatToDate(foundUser.age))
         : (returnPro.age = "");
@@ -172,7 +180,11 @@ class AuthController {
     let profile = await User.findOne({ phone });
     if (!profile) return res.status(404).json({ status: false });
 
-    const returnPro = _.omit(profile.toObject(), ["password", "age"]);
+    const returnPro = _.omit(profile.toObject(), [
+      "password",
+      "age",
+      "friends",
+    ]);
     profile.age
       ? (returnPro.age = formatToDate(profile.age))
       : (returnPro.age = "");
@@ -186,7 +198,11 @@ class AuthController {
     if (anotherId == userId) {
       const profile = await User.findById(userId);
       if (!profile) return res.status(404).json({ status: false });
-      const returnPro = _.omit(profile.toObject(), ["password", "age"]);
+      const returnPro = _.omit(profile.toObject(), [
+        "password",
+        "age",
+        "friends",
+      ]);
       profile.age
         ? (returnPro.age = formatToDate(anotherProfile.age))
         : (returnPro.age = "");
@@ -194,7 +210,11 @@ class AuthController {
     }
     const anotherProfile = await User.findById(anotherId);
     if (!anotherProfile) return res.status(404).json({ status: false });
-    const returnPro = _.omit(anotherProfile.toObject(), ["password", "age"]);
+    const returnPro = _.omit(anotherProfile.toObject(), [
+      "password",
+      "age",
+      "friends",
+    ]);
     anotherProfile.age
       ? (returnPro.age = formatToDate(anotherProfile.age))
       : (returnPro.age = "");
@@ -223,7 +243,11 @@ class AuthController {
         modifyFields,
         { new: true }
       );
-      const returnPro = _.omit(updated.toObject(), ["password", "age"]);
+      const returnPro = _.omit(updated.toObject(), [
+        "password",
+        "age",
+        "friends",
+      ]);
       returnPro.age = formatToDate(updated.age);
       return res.status(200).json(response(true, returnPro));
     } catch (err) {
@@ -283,9 +307,7 @@ class AuthController {
   };
 
   //get all user to search
-  searchingUser = async (req, res) => {
-
-  };
+  searchingUser = async (req, res) => {};
 }
 
 module.exports = new AuthController();
