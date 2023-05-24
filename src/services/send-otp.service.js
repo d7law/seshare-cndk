@@ -7,8 +7,8 @@ const sendSMS = function (phones, content, type, sender) {
   var params = JSON.stringify({
     to: [phones],
     content: content,
-    sms_type: 1,
-    sender: "",
+    type: 4,
+    sender: "Verify",
   });
   console.log(params);
   var buf = new Buffer(ACCESS_TOKEN + ":x");

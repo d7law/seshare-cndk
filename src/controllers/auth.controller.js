@@ -176,18 +176,23 @@ class AuthController {
 
   //[POST] user profile
   async userProfile(req, res) {
+    const userId = res.locals.payload.id;
     const phone = res.locals.payload.phone;
-    let profile = await User.findOne({ phone });
+    let profile = await User.findById(userId);
     if (!profile) return res.status(404).json({ status: false });
 
-    const returnPro = _.omit(profile.toObject(), [
-      "password",
-      "age",
-      "friends",
-    ]);
+    let returnPro = _.omit(profile.toObject(), ["password", "age", "friends"]);
     profile.age
       ? (returnPro.age = formatToDate(profile.age))
       : (returnPro.age = "");
+
+    //count list friends
+    const countFriends = await Friend.count({
+      recipient_id: new mongoose.Types.ObjectId(userId),
+      status: 3,
+    });
+    console.log(countFriends);
+    returnPro.total_friends = countFriends ? countFriends : 0;
     return res.status(200).json(response(true, returnPro));
   }
 
@@ -218,6 +223,13 @@ class AuthController {
     anotherProfile.age
       ? (returnPro.age = formatToDate(anotherProfile.age))
       : (returnPro.age = "");
+
+    //count Friends:
+    const countFriends = await Friend.count({
+      recipient_id: new mongoose.Types.ObjectId(anotherId),
+      status: 3,
+    });
+    returnPro.total_friends = countFriends;
 
     //check status friend
     const checkFriend = await Friend.findOne({
