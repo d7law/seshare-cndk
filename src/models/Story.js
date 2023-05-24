@@ -10,7 +10,7 @@ const storySchema = new Schema(
     },
     privacy: {
       type: String,
-      enum: ["public", "private"],
+      enum: ["public", "private", "friends"],
       default: "public",
     },
     user: {

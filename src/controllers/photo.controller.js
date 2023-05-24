@@ -1,6 +1,7 @@
 const Photo = require("../models/Photo");
 const LikePostOfUser = require("../models/LikePostOfUser");
 const Comments = require("../models/Comment");
+const Friend = require("../models/Friend");
 const fs = require("fs");
 const path = require("path");
 const jwt = require("jsonwebtoken");
@@ -39,26 +40,64 @@ class PhotoController {
   // Get Home-Page-Post
   homePagePosts = async (req, res) => {
     const userId = res.locals.payload.id;
-    let listPhoto = await Photo.find({ privacy: "public" })
+    let listPost = await Photo.find({ privacy: "public" })
       .lean()
       .populate("user_id", "avatar_path full_name")
       .sort({ uploadAt: -1 });
 
-    if (!listPhoto || listPhoto.length < 1)
-      return res.status(404).json(response(false, listPhoto));
+    //find Friends
+    const listFriendsDb = await Friend.find({
+      recipient_id: new mongoose.Types.ObjectId(userId),
+      status: 3,
+    })
+      .lean()
+      .select(["-_id", "requester_id"]);
 
-    //check liked
-    listPhoto.forEach((x) => {
+    // Find 'friends' post
+    //// init OR operator
+    const orOperatorFriend = _.map(listFriendsDb, (x) => ({
+      user_id: x.requester_id,
+    }));
+    console.log(orOperatorFriend);
+
+    const listFriendPost = await Photo.find({ privacy: "friends" })
+      .or(
+        orOperatorFriend.length > 0
+          ? orOperatorFriend
+          : [{ userId: "EMPTY_CODE" }, { userId: "EMPTY_CODE2" }]
+      )
+      .lean()
+      .populate("user_id", "avatar_path full_name");
+
+    // merge 'friends' and 'public' post
+    listPost = [...listFriendPost, ...listPost];
+
+    console.log(listFriendPost);
+    const listFriends = _.map(listFriendsDb, (x) => x.requester_id.toString());
+    console.log(listFriends);
+    let listFriendsPhoto = [];
+
+    if (!listPost || listPost.length < 1)
+      return res.status(404).json(response(false, listPost));
+
+    //check liked and Friend
+    listPost.forEach((x) => {
       const listLikeOfThisPost = _.map(x.list_likes, (item) => {
         return item.toString();
       });
+
+      //Check Friend
+      const isFriend = _.includes(listFriends, x.user_id._id.toString());
+      console.log(x.user_id._id);
+      x.isFriend = isFriend ? true : false;
+      // Check Like
       const isLike = _.includes(listLikeOfThisPost, userId);
       x.uploadAt = formatTimeUpload(x.uploadAt);
       if (isLike) {
         x.liked = true;
       }
     });
-    return res.status(200).json(response(true, listPhoto));
+    return res.status(200).json(response(true, listPost));
   };
   //Get all Posts of user
   getListAllMyPost = async (req, res) => {
