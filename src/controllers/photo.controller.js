@@ -77,6 +77,7 @@ class PhotoController {
       .populate("user_id", "avatar_path full_name");
     // merge 'friends' and 'public' post
     listPost = [...listFriendPost, ...listPost, ...listUserPost];
+    listPost = _.reverse(_.sortBy(listPost, "uploadAt"));
 
     console.log(listFriendPost);
     const listFriends = _.map(listFriendsDb, (x) => x.requester_id.toString());
