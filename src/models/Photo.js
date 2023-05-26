@@ -57,7 +57,6 @@ const photoSchema = new Schema({
   },
   checkin_location: {
     type: String,
-
     default: "",
   },
 });

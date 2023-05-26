@@ -103,7 +103,8 @@ class PhotoController {
         x.liked = true;
       }
     });
-    return res.status(200).json(response(true, listPost));
+    const resList = _.uniqWith(listPost, _.isEqual);
+    return res.status(200).json(response(true, resList));
   };
   //Get all Posts of user
   getListAllMyPost = async (req, res) => {
