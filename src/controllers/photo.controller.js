@@ -72,7 +72,9 @@ class PhotoController {
     //find userPost
     const listUserPost = await Photo.find({
       user_id: new mongoose.Types.ObjectId(userId),
-    });
+    })
+      .lean()
+      .populate("user_id", "avatar_path full_name");
     // merge 'friends' and 'public' post
     listPost = [...listFriendPost, ...listPost, ...listUserPost];
 
