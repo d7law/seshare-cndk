@@ -59,6 +59,14 @@ const photoSchema = new Schema({
     type: String,
     default: "",
   },
+  hidden_cmt: {
+    type: Boolean,
+    default: false,
+  },
+  hidden_like: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Photo = mongoose.model("Photo", photoSchema);

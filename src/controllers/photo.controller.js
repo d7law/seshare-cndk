@@ -115,7 +115,7 @@ class PhotoController {
       .sort({ uploadAt: -1 });
 
     if (!listPhoto || listPhoto.length < 1)
-      return res.status(404).json(response(false, listPhoto));
+      return res.status(404).json(response(true, listPhoto));
 
     //check liked
     listPhoto.forEach((x) => {
@@ -151,7 +151,7 @@ class PhotoController {
         .sort({ uploadAt: -1 });
     }
     if (!listPhoto || listPhoto.length < 1)
-      return res.status(404).json(response(false, listPhoto));
+      return res.status(404).json(response(true, listPhoto));
 
     //check liked
     listPhoto.forEach((x) => {

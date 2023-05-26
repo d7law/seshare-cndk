@@ -277,9 +277,10 @@ class AuthController {
   };
   //[POST] update field
   updateField = async (req, res) => {
-    const photos = await Story.find({});
+    const photos = await Photo.find({});
     const result = photos.forEach(async (x) => {
-      x.is_favorite = "false";
+      x.hidden_cmt = false;
+      x.hidden_like = false;
       await x.save();
       //await Photo.updateOne({ _id: x._id }, { $set: { list_likes: [] } });
     });
