@@ -480,6 +480,46 @@ class PhotoController {
       data: foundComments,
     });
   };
+
+  // Hidden Like
+  hiddenLike = async (req, res) => {
+    const userId = res.locals.payload.id;
+    const postId = req.body.postId;
+
+    //hiddenLike
+    try {
+      const findPost = await Photo.findById(postId);
+      if (findPost.hidden_like) {
+        findPost.hidden_like = false;
+      } else {
+        findPost.hidden_like = true;
+      }
+      await findPost.save();
+      return res.status(200).json({ status: true });
+    } catch (error) {
+      return res.status(500).json({ status: false });
+    }
+  };
+
+  //Hidden Comment
+  hiddenCmt = async (req, res) => {
+    const userId = res.locals.payload.id;
+    const postId = req.body.postId;
+
+    //hiddenLike
+    try {
+      const findPost = await Photo.findById(postId);
+      if (findPost.hidden_cmt) {
+        findPost.hidden_cmt = false;
+      } else {
+        findPost.hidden_cmt = true;
+      }
+      await findPost.save();
+      return res.status(200).json({ status: true });
+    } catch (error) {
+      return res.status(500).json({ status: false });
+    }
+  };
 }
 
 module.exports = new PhotoController();

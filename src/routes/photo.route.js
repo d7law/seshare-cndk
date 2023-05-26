@@ -31,11 +31,13 @@ photoRoute.post(
 );
 
 photoRoute.post("/photo/like", photoController.likePost);
+photoRoute.post("/photo/hidden-like", photoController.hiddenLike);
 photoRoute.post("/photo/list-like-of-post", photoController.getListLikeOfPost);
 
 photoRoute.post("/photo/add-comment", photoController.addComment);
 photoRoute.post("/photo/delete-comment", photoController.deleteComment);
 photoRoute.post("/photo/update-comment", photoController.updateComment);
+photoRoute.post('/photo/hidden-comment', photoController.hiddenCmt)
 photoRoute.post(
   "/photo/list-comment-of-post",
   photoController.getListCommentOfPost
