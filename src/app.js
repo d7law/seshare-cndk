@@ -8,6 +8,8 @@ const friendRoute = require("./routes/friend.route");
 const path = require("path");
 const morgan = require("morgan");
 const multer = require("multer");
+const http = require("http");
+const socketIO = require("socket.io");
 const initRouter = require("./routes");
 const { default: upload } = require("./services/upload.service");
 require("dotenv").config();
@@ -22,6 +24,27 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(morgan("combined"));
+
+// Handle socket.io
+const server = http.createServer(app);
+const io = socketIO(server);
+
+io.on("connection", (socket) => {
+  console.log("New user connected");
+
+  // Xử lý sự kiện chat
+  socket.on("chat message", (msg) => {
+    console.log("Message: " + msg);
+
+    // Gửi tin nhắn tới tất cả các client khác
+    io.emit("chat message", msg);
+  });
+
+  // Xử lý sự kiện ngắt kết nối
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
+  });
+});
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/html/home.html");
