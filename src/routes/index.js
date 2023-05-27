@@ -64,6 +64,7 @@ function initRouter(app) {
     photoController.uploadPhoto
   );
   app.use("/api/filter/search", filterController.searchUser);
+  app.use("/api/filter/populate", filterController.populateUserAndPhoto);
 
   app.use("/api/forgot-password", authController.forgotPsw);
   app.use("/api/check-phone", authController.checkPhone);
