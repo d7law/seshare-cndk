@@ -42,6 +42,7 @@
       e.preventDefault();
       const input = document.getElementById('message-input');
       const message = input.value.trim();
+      console.log(message)
       if (message !== '') {
         socket.emit('chat message', { content: message });
         input.value = '';
