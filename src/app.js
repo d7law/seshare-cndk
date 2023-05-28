@@ -17,14 +17,6 @@ require("dotenv").config();
 db();
 
 const PORT = process.env.PORT;
-
-app.use(cors());
-app.use(express.static(path.join(__dirname, "public")));
-//app.use(express.static(path.join(__dirname, "uploads")));
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-app.use(morgan("combined"));
-
 // Handle socket.io
 const server = http.createServer(app);
 const io = socketIO(server);
@@ -45,6 +37,12 @@ io.on("connection", (socket) => {
     console.log("User disconnected");
   });
 });
+app.use(cors());
+app.use(express.static(path.join(__dirname, "public")));
+//app.use(express.static(path.join(__dirname, "uploads")));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(morgan("combined"));
 
 // app.get("/", (req, res) => {
 //   res.sendFile(__dirname + "/public/html/home.html");
