@@ -42,7 +42,7 @@ io.on("connection", (socket) => {
       senderId: userId,
       content: data.message,
     };
-    io.emit('chat message', message);
+    io.emit("chat message", message);
   });
   // Xử lý sự kiện ngắt kết nối
   socket.on("disconnect", () => {
@@ -51,7 +51,7 @@ io.on("connection", (socket) => {
 });
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/html/home.html");
+  return res.sendFile(__dirname + "/index.html");
 });
 
 //multer config
