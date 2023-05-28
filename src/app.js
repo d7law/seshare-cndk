@@ -8,11 +8,8 @@ const friendRoute = require("./routes/friend.route");
 const path = require("path");
 const morgan = require("morgan");
 const multer = require("multer");
-const { Server } = require("socket.io");
-const http = require("http").createServer(app);
-const io = new Server(http, {
-  path: "/socket.io", // Định nghĩa đường dẫn cho Socket.io
-});
+const http = require("http");
+const socketIO = require("socket.io");
 const initRouter = require("./routes");
 const { default: upload } = require("./services/upload.service");
 require("dotenv").config();
@@ -20,11 +17,17 @@ require("dotenv").config();
 db();
 
 const PORT = process.env.PORT;
-// Handle socket.io
 
-app.use("/socket.io", (req, res) => {
-  res.send("Socket.io route"); // Hoặc bạn có thể không gửi gì cả, chỉ cần đảm bảo đường dẫn này được khai báo
-});
+app.use(cors());
+app.use(express.static(path.join(__dirname, "public")));
+//app.use(express.static(path.join(__dirname, "uploads")));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(morgan("combined"));
+
+// Handle socket.io
+const server = http.createServer(app);
+const io = socketIO(server);
 
 io.on("connection", (socket) => {
   console.log("New user connected");
@@ -42,22 +45,16 @@ io.on("connection", (socket) => {
     console.log("User disconnected");
   });
 });
-// app.use(cors());
-// app.use(express.static(path.join(__dirname, "public")));
-// //app.use(express.static(path.join(__dirname, "uploads")));
-// app.use(express.urlencoded({ extended: false }));
-// app.use(express.json());
-app.use(morgan("combined"));
 
-// // app.get("/", (req, res) => {
-// //   res.sendFile(__dirname + "/public/html/home.html");
-// // });
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/public/html/home.html");
+});
 
-// //multer config
-// upload;
-// initRouter(app);
+//multer config
+upload;
+initRouter(app);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`App is running at port: ${PORT}`);
 });
 
