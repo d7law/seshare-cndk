@@ -46,9 +46,9 @@ io.on("connection", (socket) => {
   });
 });
 
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/html/home.html");
-});
+// app.get("/", (req, res) => {
+//   res.sendFile(__dirname + "/public/html/home.html");
+// });
 
 //multer config
 upload;
