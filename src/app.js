@@ -35,6 +35,7 @@ io.on("connection", (socket) => {
   let userId;
   socket.on("login", (data) => {
     userId = data.userId;
+    console.log(userId);
   });
 
   socket.on("chat message", (data) => {
@@ -42,6 +43,7 @@ io.on("connection", (socket) => {
       senderId: userId,
       content: data.message,
     };
+    console.log(message);
     io.emit("chat message", message);
   });
   // Xử lý sự kiện ngắt kết nối
