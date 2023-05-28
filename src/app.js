@@ -32,14 +32,18 @@ const io = socketIO(server);
 io.on("connection", (socket) => {
   console.log("New user connected");
 
-  // Xử lý sự kiện chat
-  socket.on("chat message", (msg) => {
-    console.log("Message: " + msg);
-
-    // Gửi tin nhắn tới tất cả các client khác
-    io.emit("chat message", msg);
+  let userId;
+  socket.on("login", (data) => {
+    userId = data.userId;
   });
 
+  socket.on("chat message", (data) => {
+    const message = {
+      senderId: userId,
+      content: data.message,
+    };
+    io.emit('chat message', message);
+  });
   // Xử lý sự kiện ngắt kết nối
   socket.on("disconnect", () => {
     console.log("User disconnected");
