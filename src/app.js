@@ -8,8 +8,8 @@ const friendRoute = require("./routes/friend.route");
 const path = require("path");
 const morgan = require("morgan");
 const multer = require("multer");
-const http = require("http");
-const socketIO = require("socket.io");
+const http = require("http").createServer(app);
+const io = require("socket.io")(http);
 const initRouter = require("./routes");
 const { default: upload } = require("./services/upload.service");
 require("dotenv").config();
@@ -18,8 +18,6 @@ db();
 
 const PORT = process.env.PORT;
 // Handle socket.io
-const server = http.createServer(app);
-const io = socketIO(server);
 
 io.on("connection", (socket) => {
   console.log("New user connected");
