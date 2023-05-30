@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const { makeRandom } = require("../utils/format-text");
 const { countTimes, formatTimeUpload } = require("../utils/format-date");
+const { SendNotification } = require("../utils/send-notification");
 const { $where } = require("../models/User");
 const { default: mongoose } = require("mongoose");
 var response = require("../models/ResponseModel").response;
@@ -226,6 +227,13 @@ class PhotoController {
     });
     const createdPhoto = await newPhoto.save();
     if (!createdPhoto) res.status(400).json(response(false));
+    // onesignal
+    SendNotification("Test", "Test", (error, results) => {
+      if (error) {
+        console.log(err);
+      }
+      console.log(results);
+    });
     return res.status(200).json(response(true, newPhoto));
   };
 
