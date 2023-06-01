@@ -29,19 +29,28 @@ app.use(morgan("combined"));
 const server = http.createServer(app);
 const io = socketIO(server);
 
+let countPp;
 io.on("connection", (socket) => {
   console.log("New user connected");
+  countPp++;
 
   let userId;
   socket.on("login", (data) => {
     userId = data.userId;
     console.log(userId);
   });
+  // gui tin nhan di {socketId, senderId, message}
 
+  // nhan ve {senderId, message, isYourMessage}
   socket.on("chat message", (data) => {
-    const { ...message } = data;
-    console.log(message);
-    io.emit("chat message", message);
+    console.log(socket.id);
+    let isYourMessage = false;
+    const { socketId, ...other } = data;
+    if (socketId == socket.id) {
+      isYourMessage = true;
+    }
+    console.log(other);
+    io.emit("chat message", { other, isYourMessage });
   });
   // Xử lý sự kiện ngắt kết nối
   socket.on("disconnect", () => {

@@ -26,7 +26,7 @@
       const li = document.createElement('li');
       const p = document.createElement('p');
       li.textContent = msg.content;
-      p.textContent = 'Web User';
+      p.textContent = msg.userId;
       document.getElementById('messages').appendChild(p).appendChild(li);
     });
 
@@ -43,10 +43,11 @@
     document.getElementById('chat-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const input = document.getElementById('message-input');
+      const socketId = socket.id;
       const message = input.value.trim();
       console.log(message)
       if (message !== '') {
-        socket.emit('chat message', { content: message });
+        socket.emit('chat message', { socketId: socketId, content: message, userId: 'user',  });
         input.value = '';
       }
     });
@@ -56,3 +57,7 @@
 </body>
 
 </html>
+
+// gui tin nhan di {socketId, senderId, message}
+
+// nhan ve {senderId, message, isYourMessage}
