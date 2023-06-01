@@ -50,7 +50,7 @@ io.on("connection", (socket) => {
       isYourMessage = true;
     }
     console.log(other);
-    io.emit("chat message", { other, isYourMessage });
+    io.emit("chat message", { ...other, isYourMessage });
   });
   // Xử lý sự kiện ngắt kết nối
   socket.on("disconnect", () => {
