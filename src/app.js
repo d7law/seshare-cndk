@@ -39,12 +39,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("chat message", (data) => {
-    const message = {
-      senderId: userId,
-      content: data,
-    };
+    const { ...message } = data;
     console.log(message);
-    console.log(data);
     io.emit("chat message", message);
   });
   // Xử lý sự kiện ngắt kết nối
