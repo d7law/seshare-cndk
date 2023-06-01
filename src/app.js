@@ -46,7 +46,7 @@ io.on("connection", (socket) => {
     console.log(socket.id);
     let isYourMessage = false;
     const { socketId, ...other } = data;
-    if (socketId == socket.id) {
+    if (socketId && socketId === socket.id) {
       isYourMessage = true;
     }
     console.log(other);
