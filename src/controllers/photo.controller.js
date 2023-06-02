@@ -463,15 +463,14 @@ class PhotoController {
 
     let foundComments = await Comments.findOne({ post_id: postId })
       .lean()
-      .populate("comments.user_id", "_id full_name avatar_path");
+      .populate("comments.user_id", "full_name avatar_path");
     if (!foundComments) {
       const initComment = await Comments.create({
         post_id: postId,
-        comments: [],
       });
       return res.status(200).json({ status: true, data: initComment });
     }
-
+    console.log(foundComments);
     foundComments.comments = _.map(foundComments.comments, (item) => {
       const statusTime = formatTimeUpload(item.comment_time);
       const is_commented = userId == item.user_id._id.toString() ? true : false;
