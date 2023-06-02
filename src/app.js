@@ -69,8 +69,9 @@ app.post("/chat", checkToken, async (req, res) => {
     });
     // gui tin nhan di {socketId, senderId, message}
 
+    const roomId = foundRoom._id.toString();
     // nhan ve {senderId, message, isYourMessage}
-    socket.on(`${foundRoom._id}`, (data) => {
+    socket.on(`${roomId}`, (data) => {
       console.log(socket.id);
       let isYourMessage = false;
       const { socketId, ...other } = data;
@@ -78,14 +79,14 @@ app.post("/chat", checkToken, async (req, res) => {
         isYourMessage = true;
       }
       console.log(other);
-      io.emit(`${foundRoom._id}`, { ...other, isYourMessage });
+      io.emit(`${roomId}`, { ...other, isYourMessage });
     });
     // Xử lý sự kiện ngắt kết nối
     socket.on("disconnect", () => {
       console.log("User disconnected");
     });
   });
-  return res.json({ roomId: foundRoom._id });
+  return res.json({ roomId: roomId });
 });
 
 //multer config
