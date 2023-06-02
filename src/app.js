@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const db = require("./config/database");
 const friendRoute = require("./routes/friend.route");
 const path = require("path");
+const _ = require("lodash");
 const morgan = require("morgan");
 const multer = require("multer");
 const http = require("http");
@@ -89,14 +90,17 @@ app.post("/chat", checkToken, async (req, res) => {
   }
 
   let roomId = foundRoom._id.toString();
-  let listToken = await TokenOneSignal.find({
+  const listTokenUser = await TokenOneSignal.find({
     user: new mongoose.Types.ObjectId(data.userB),
   });
-  listToken = listToken.map((x) => x.token_signal);
+  const listToken = listTokenUser.map((x) => x.token_signal);
+  const listUserId = _.uniq(listTokenUser.map((x) => x.user));
   console.log(listToken);
   SendNotificationToDevice(
     listToken,
     `${res.locals.userName} vừa yêu cầu nhắn tin với bạn. Trò chuyện ngay thôi <3`,
+    listUserId,
+    res.locals.payload.id,
     (error, results) => {
       if (error) {
         console.log(err);

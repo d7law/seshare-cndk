@@ -1,6 +1,7 @@
+const { default: mongoose } = require("mongoose");
 const { ONE_SIGNAL_CONFIG } = require("../config/one-signal");
-
-async function SendNotification(data, callback) {
+const Notification = require("../models/Notification");
+async function SendNotification(data, user, whoUser, callback) {
   let inputMessage = {
     app_id: ONE_SIGNAL_CONFIG.APP_ID,
     contents: {
@@ -41,7 +42,13 @@ async function SendNotification(data, callback) {
   req.write(JSON.stringify(inputMessage));
   req.end();
 }
-async function SendNotificationToDevice(player_ids, data, callback) {
+async function SendNotificationToDevice(
+  player_ids,
+  data,
+  sendUser,
+  whoUser,
+  callback
+) {
   let inputMessage = {
     app_id: ONE_SIGNAL_CONFIG.APP_ID,
     contents: {
@@ -81,5 +88,11 @@ async function SendNotificationToDevice(player_ids, data, callback) {
 
   req.write(JSON.stringify(inputMessage));
   req.end();
+
+  const saveNoti = await Notification.create({
+    own_user: sendUser,
+    who_user: new mongoose.Types.ObjectId(whoUser),
+    content: data,
+  });
 }
 module.exports = { SendNotification, SendNotificationToDevice };
