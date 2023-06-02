@@ -77,14 +77,16 @@ io.on("connection", (socket) => {
 
   // nhan ve {senderId, message, isYourMessage}
   socket.on("seshare chat", (data) => {
-    console.log(socket.id);
-    let isYourMessage = false;
-    const { socketId, ...other } = data;
-    if (socketId && socketId === socket.id) {
-      isYourMessage = true;
-    }
-    console.log(other);
-    io.emit("seshare chat", { ...other, isYourMessage });
+    // console.log(socket.id);
+    // console.log
+    // let isYourMessage = false;
+    // const { socketId, ...other } = data;
+    // if (socketId && socketId === socket.id) {
+    //   isYourMessage = true;
+    // }
+    // console.log(other);
+    // io.emit("seshare chat", { ...other, isYourMessage });
+    io.emit("seshare chat", data);
   });
   // Xử lý sự kiện ngắt kết nối
   socket.on("disconnect", () => {
