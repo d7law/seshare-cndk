@@ -13,6 +13,9 @@ const socketIO = require("socket.io");
 const initRouter = require("./routes");
 const { default: upload } = require("./services/upload.service");
 require("dotenv").config();
+const Chat = require("./models/Chat");
+const { checkToken } = require("./middleware/checkToken");
+const { default: mongoose } = require("mongoose");
 
 db();
 
@@ -29,37 +32,54 @@ app.use(morgan("combined"));
 const server = http.createServer(app);
 const io = socketIO(server);
 
-let countPp;
-io.on("connection", (socket) => {
-  console.log("New user connected");
-  countPp++;
+// Handle chat
 
-  let userId;
-  socket.on("login", (data) => {
-    userId = data.userId;
-    console.log(userId);
-  });
-  // gui tin nhan di {socketId, senderId, message}
+app.post("/api/chat/get-list-chat", checkToken, async (req, res) => {
+  const userId = new mongoose.Types.ObjectId(res.locals.payload.id);
+  const listRoom = await Chat.find({ user: { $in: [userId] } })
+    .lean()
+    .populate("user", "full_name avatar_path");
 
-  // nhan ve {senderId, message, isYourMessage}
-  socket.on("chat message", (data) => {
-    console.log(socket.id);
-    let isYourMessage = false;
-    const { socketId, ...other } = data;
-    if (socketId && socketId === socket.id) {
-      isYourMessage = true;
-    }
-    console.log(other);
-    io.emit("chat message", { ...other, isYourMessage });
-  });
-  // Xử lý sự kiện ngắt kết nối
-  socket.on("disconnect", () => {
-    console.log("User disconnected");
-  });
+  return res.status(200).json({ status: true, data: listRoom });
 });
 
-app.get("/", (req, res) => {
-  return res.sendFile(__dirname + "/index.html");
+app.post("/chat", checkToken, async (req, res) => {
+  const userA = new mongoose.Types.ObjectId(res.locals.payload.id);
+  const userB = new mongoose.Types.ObjectId(req.body.userB);
+
+  // Find Room
+  let foundRoom = await Chat.findOne({ user: { $in: [userA, userB] } });
+  if (!foundRoom) {
+    foundRoom = await Chat.create({ content: "", user: [userA, userB] });
+  }
+
+  io.on("connection", (socket) => {
+    console.log("New user connected");
+
+    let userId;
+    socket.on("login", (data) => {
+      userId = data.userId;
+      console.log(userId);
+    });
+    // gui tin nhan di {socketId, senderId, message}
+
+    // nhan ve {senderId, message, isYourMessage}
+    socket.on(`${foundRoom._id}`, (data) => {
+      console.log(socket.id);
+      let isYourMessage = false;
+      const { socketId, ...other } = data;
+      if (socketId && socketId === socket.id) {
+        isYourMessage = true;
+      }
+      console.log(other);
+      io.emit(`${foundRoom._id}`, { ...other, isYourMessage });
+    });
+    // Xử lý sự kiện ngắt kết nối
+    socket.on("disconnect", () => {
+      console.log("User disconnected");
+    });
+  });
+  return res.json({ roomId: foundRoom._id });
 });
 
 //multer config

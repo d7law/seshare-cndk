@@ -1,54 +1,50 @@
-const _ = require("lodash");
+const chatNamespace1 = io.of("/chat1");
+const chatNamespace2 = io.of("/chat2");
 
-let a = [{ photo: [1, 2, 3] }, { photo: [4, 5, 6] }];
-const r = _.countBy(a);
-console.log(r);
+chatNamespace1.on("connection", (socket) => {
+  console.log("A client connected to /chat1 namespace!");
 
-const arr = [
-  {
-    _id: "646b358a9a4b6e76d4bb8d54",
-    photo_path: ["7r71K_url_1512AQ4L.jpg", "L1WAU_url_ZmM56c9w.jpg"],
-    caption: "Picnic ☘️🌈",
-    total_likes: 2,
-    list_likes: ["646b31b01ac9a8d738d3acb9", "646cd025f6ad2d12b7d956fb"],
-    liked: false,
-    total_comment: 1,
-    isAvatar: false,
-    privacy: "public",
-    user_id: {
-      _id: "646b34fbc0dc95754e1cf359",
-      full_name: "Duy Khang",
-      avatar_path: "Kkj70_url_yAqYefOD.jpg",
-    },
-    user_location: "Gò Vấp, Thành phố Hồ Chí Minh, Việt Nam ",
-    checkin_location:
-      "137 Thùy Vân, Thành phố Vũng Tầu, Bà Rịa - Vũng Tàu, Việt Nam ",
-    uploadAt: "4 ngày trước",
-    __v: 0,
-    isFriend: false,
-  },
-  {
-    _id: "646b358a9a4b6e76d4bb8d54",
-    photo_path: ["7r71K_url_1512AQ4L.jpg", "L1WAU_url_ZmM56c9w.jpg"],
-    caption: "Picnic ☘️🌈",
-    total_likes: 2,
-    list_likes: ["646b31b01ac9a8d738d3acb9", "646cd025f6ad2d12b7d956fb"],
-    liked: false,
-    total_comment: 1,
-    isAvatar: false,
-    privacy: "public",
-    user_id: {
-      _id: "646b34fbc0dc95754e1cf359",
-      full_name: "Duy Khang",
-      avatar_path: "Kkj70_url_yAqYefOD.jpg",
-    },
-    user_location: "Gò Vấp, Thành phố Hồ Chí Minh, Việt Nam ",
-    checkin_location:
-      "137 Thùy Vân, Thành phố Vũng Tầu, Bà Rịa - Vũng Tàu, Việt Nam ",
-    uploadAt: "4 ngày trước",
-    __v: 0,
-    isFriend: false,
-  },
-];
+  // Lắng nghe sự kiện "chat message" từ client
+  socket.on("chat message", (message) => {
+    console.log(`Received message in /chat1 namespace: ${message}`);
+    
+    // Gửi tin nhắn cho tất cả các client trong cùng room
+    chatNamespace1.to(message.room).emit("chat message", message);
+  });
 
-console.log(_.uniqBy(arr, "_id"));
+  // Tham gia vào một room
+  socket.on("join room", (room) => {
+    console.log(`Client joined room ${room}`);
+    socket.join(room);
+  });
+
+  // Rời khỏi một room
+  socket.on("leave room", (room) => {
+    console.log(`Client left room ${room}`);
+    socket.leave(room);
+  });
+});
+
+chatNamespace2.on("connection", (socket) => {
+  console.log("A client connected to /chat2 namespace!");
+
+  // Lắng nghe sự kiện "chat message" từ client
+  socket.on("chat message", (message) => {
+    console.log(`Received messagein /chat2 namespace: ${message}`);
+    
+    // Gửi tin nhắn cho tất cả các client trong cùng room
+    chatNamespace2.to(message.room).emit("chat message", message);
+  });
+
+  // Tham gia vào một room
+  socket.on("join room", (room) => {
+    console.log(`Client joined room ${room}`);
+    socket.join(room);
+  });
+
+  // Rời khỏi một room
+  socket.on("leave room", (room) => {
+    console.log(`Client left room ${room}`);
+    socket.leave(room);
+  });
+});
