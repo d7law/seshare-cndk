@@ -76,7 +76,7 @@ io.on("connection", (socket) => {
   // gui tin nhan di {socketId, senderId, message}
 
   // nhan ve {senderId, message, isYourMessage}
-  socket.on(`${roomId}`, (data) => {
+  socket.on("seshare chat", (data) => {
     console.log(socket.id);
     let isYourMessage = false;
     const { socketId, ...other } = data;
@@ -84,7 +84,7 @@ io.on("connection", (socket) => {
       isYourMessage = true;
     }
     console.log(other);
-    io.emit(`${roomId}`, { ...other, isYourMessage });
+    io.emit("seshare chat", { ...other, isYourMessage });
   });
   // Xử lý sự kiện ngắt kết nối
   socket.on("disconnect", () => {
