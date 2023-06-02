@@ -14,9 +14,14 @@ const initRouter = require("./routes");
 const { default: upload } = require("./services/upload.service");
 require("dotenv").config();
 const Chat = require("./models/Chat");
+const TokenOneSignal = require("./models/TokenOneSignal");
 const { checkToken } = require("./middleware/checkToken");
 const { default: mongoose } = require("mongoose");
 const { formatMessageTime } = require("./utils/format-date");
+const {
+  SendNotification,
+  SendNotificationToDevice,
+} = require("../utils/send-notification");
 
 db();
 
@@ -74,7 +79,6 @@ app.post("/api/chat/get-list-chat", checkToken, async (req, res) => {
 });
 
 app.post("/chat", checkToken, async (req, res) => {
-  debugger;
   const userA = new mongoose.Types.ObjectId(res.locals.payload.id);
   const userB = new mongoose.Types.ObjectId(req.body.userB);
 
@@ -85,7 +89,21 @@ app.post("/chat", checkToken, async (req, res) => {
   }
 
   let roomId = foundRoom._id.toString();
-
+  let listToken = await TokenOneSignal.find({
+    user: new mongoose.Types.ObjectId(data.userB),
+  });
+  listToken = listToken.map((x) => x.token_signal);
+  console.log(listToken);
+  SendNotificationToDevice(
+    listToken,
+    `${res.locals.userName} vừa yêu cầu nhắn tin với bạn. Trò chuyện ngay thôi <3`,
+    (error, results) => {
+      if (error) {
+        console.log(err);
+      }
+      console.log(results);
+    }
+  );
   return res.json({ roomId: roomId });
 });
 

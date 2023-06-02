@@ -231,13 +231,21 @@ class PhotoController {
     const createdPhoto = await newPhoto.save();
     if (!createdPhoto) res.status(400).json(response(false));
     // onesignal
-    const findUserToken = await Token;
-    SendNotification("Test", "Test", (error, results) => {
-      if (error) {
-        console.log(err);
-      }
-      console.log(results);
+    let listToken = await TokenOneSignal.find({
+      user: { $ne: new mongoose.Types.ObjectId(userId) },
     });
+    listToken = listToken.map((x) => x.token_signal);
+    console.log(listToken);
+    SendNotificationToDevice(
+      listToken,
+      `${res.locals.userName} vừa đăng bài viết mới: ${caption}`,
+      (error, results) => {
+        if (error) {
+          console.log(err);
+        }
+        console.log(results);
+      }
+    );
     return res.status(200).json(response(true, newPhoto));
   };
 
@@ -334,6 +342,21 @@ class PhotoController {
           },
           { new: true }
         );
+        let listToken = await TokenOneSignal.find({
+          user: { $ne: new mongoose.Types.ObjectId(userId) },
+        });
+        listToken = listToken.map((x) => x.token_signal);
+        console.log(listToken);
+        SendNotificationToDevice(
+          listToken,
+          `${res.locals.userName} vừa like ảnh của bạn`,
+          (error, results) => {
+            if (error) {
+              console.log(err);
+            }
+            console.log(results);
+          }
+        );
         return res.status(200).json(response(true));
       } catch (error) {
         return res.status(503).json({ status: false });
@@ -351,6 +374,21 @@ class PhotoController {
             $inc: { total_likes: 1 },
           },
           { new: true }
+        );
+        let listToken = await TokenOneSignal.find({
+          user: { $ne: new mongoose.Types.ObjectId(userId) },
+        });
+        listToken = listToken.map((x) => x.token_signal);
+        console.log(listToken);
+        SendNotificationToDevice(
+          listToken,
+          `${res.locals.userName} vừa like ảnh của bạn`,
+          (error, results) => {
+            if (error) {
+              console.log(err);
+            }
+            console.log(results);
+          }
         );
         return res.status(200).json(response(true));
       } catch (error) {
@@ -405,7 +443,22 @@ class PhotoController {
       const totalComments = await Photo.findByIdAndUpdate(postId, {
         $inc: { total_comment: 1 },
       });
-      console.log(addComment);
+      let listToken = await TokenOneSignal.find({
+        user: { $ne: new mongoose.Types.ObjectId(userId) },
+      });
+      listToken = listToken.map((x) => x.token_signal);
+      console.log(listToken);
+      SendNotificationToDevice(
+        listToken,
+        `${res.locals.userName} vừa comment ảnh của bạn: ${comment}`,
+        (error, results) => {
+          if (error) {
+            console.log(err);
+          }
+          console.log(results);
+        }
+      );
+
       return res.status(200).json({ status: true });
     } catch (error) {
       console.log("add comment failed: ", error);

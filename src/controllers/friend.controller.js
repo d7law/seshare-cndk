@@ -1,8 +1,13 @@
 const Friend = require("../models/Friend");
 const User = require("../models/User");
+const TokenOneSignal = require("../models/TokenOneSignal");
 const mongoose = require("mongoose");
 const _ = require("lodash");
 var response = require("../models/ResponseModel").response;
+const {
+  SendNotification,
+  SendNotificationToDevice,
+} = require("../utils/send-notification");
 
 class FriendController {
   // /friends/has-been-requested
@@ -98,6 +103,21 @@ class FriendController {
         },
         { $push: { friends: docB._id } }
       );
+      let listToken = await TokenOneSignal.find({
+        user: new mongoose.Types.ObjectId(data.userB),
+      });
+      listToken = listToken.map((x) => x.token_signal);
+      console.log(listToken);
+      SendNotificationToDevice(
+        listToken,
+        `${res.locals.userName} vừa gửi lời mời kết bạn`,
+        (error, results) => {
+          if (error) {
+            console.log(err);
+          }
+          console.log(results);
+        }
+      );
       return res.status(200).json({ status: true });
     } catch (error) {
       console.log(error);
@@ -119,6 +139,21 @@ class FriendController {
       await Friend.findOneAndUpdate(
         { recipient_id: data.userA, requester_id: data.userB },
         { $set: { status: 3 } }
+      );
+      let listToken = await TokenOneSignal.find({
+        user: new mongoose.Types.ObjectId(data.userB),
+      });
+      listToken = listToken.map((x) => x.token_signal);
+      console.log(listToken);
+      SendNotificationToDevice(
+        listToken,
+        `${res.locals.userName} đã châp nhận lời mời kết bạn`,
+        (error, results) => {
+          if (error) {
+            console.log(err);
+          }
+          console.log(results);
+        }
       );
       return res.status(200).json({ status: true });
     } catch (error) {

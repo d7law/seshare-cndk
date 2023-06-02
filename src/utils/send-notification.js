@@ -1,6 +1,6 @@
 const { ONE_SIGNAL_CONFIG } = require("../config/one-signal");
 
-async function SendNotification(data, username, callback) {
+async function SendNotification(data, callback) {
   let inputMessage = {
     app_id: ONE_SIGNAL_CONFIG.APP_ID,
     contents: {
@@ -41,7 +41,7 @@ async function SendNotification(data, username, callback) {
   req.write(JSON.stringify(inputMessage));
   req.end();
 }
-async function SendNotificationToDevice(player_ids, data, username, callback) {
+async function SendNotificationToDevice(player_ids, data, callback) {
   let inputMessage = {
     app_id: ONE_SIGNAL_CONFIG.APP_ID,
     contents: {
@@ -81,9 +81,5 @@ async function SendNotificationToDevice(player_ids, data, username, callback) {
 
   req.write(JSON.stringify(inputMessage));
   req.end();
-
-  if (!pushNoti) {
-    console.log("Fail to save notification");
-  }
 }
 module.exports = { SendNotification, SendNotificationToDevice };
