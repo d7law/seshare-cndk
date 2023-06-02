@@ -39,8 +39,14 @@ app.post("/api/chat/get-list-chat", checkToken, async (req, res) => {
   const listRoom = await Chat.find({ user: { $in: [userId] } })
     .lean()
     .populate("user", "full_name avatar_path");
-
-  return res.status(200).json({ status: true, data: listRoom });
+  const result = listRoom.map((item) => {
+    const newVar = item.user.filter((user) => user._id != userId.toString());
+    return {
+      ...item,
+      user: newVar[0],
+    };
+  });
+  return res.status(200).json({ status: true, data: result });
 });
 
 app.post("/chat", checkToken, async (req, res) => {
