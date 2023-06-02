@@ -67,6 +67,7 @@ app.post("/chat", checkToken, async (req, res) => {
 io.on("connection", (socket) => {
   console.log("New user connected");
 
+  console.log(roomId);
   let userId;
   socket.on("login", (data) => {
     userId = data.userId;
