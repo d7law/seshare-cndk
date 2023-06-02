@@ -75,7 +75,6 @@ app.post("/api/chat/get-list-chat", checkToken, async (req, res) => {
   return res.status(200).json({ status: true, data: result });
 });
 
-let roomId;
 app.post("/chat", checkToken, async (req, res) => {
   const userA = new mongoose.Types.ObjectId(res.locals.payload.id);
   const userB = new mongoose.Types.ObjectId(req.body.userB);
@@ -86,7 +85,7 @@ app.post("/chat", checkToken, async (req, res) => {
     foundRoom = await Chat.create({ content: "", user: [userA, userB] });
   }
 
-  roomId = foundRoom._id.toString();
+  let roomId = foundRoom._id.toString();
 
   return res.json({ roomId: roomId });
 });

@@ -8,14 +8,10 @@ const commentSchema = new Schema({
   },
   comments: [
     {
-      _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        default: new mongoose.Types.ObjectId(),
-        unique: true,
-      },
       user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
+        default: [],
       },
       comment: {
         type: String,
@@ -27,6 +23,6 @@ const commentSchema = new Schema({
     },
   ],
 });
-const Model = mongoose.model("Comments", commentSchema);
+const Model = mongoose.model("Comment", commentSchema);
 Model.createCollection();
 module.exports = Model;

@@ -106,6 +106,7 @@ class StoryController {
 
     const matchedItems = [];
     const remainingItems = [];
+    console.log(values);
     values.forEach((x) => {
       if (x.user._id == userId && !_.isEmpty(x.story)) {
         matchedItems.push(x);

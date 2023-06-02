@@ -2,14 +2,17 @@ const Photo = require("../models/Photo");
 const LikePostOfUser = require("../models/LikePostOfUser");
 const Comments = require("../models/Comment");
 const Friend = require("../models/Friend");
-const TokenOneSignal = require
+const TokenOneSignal = require("../models/TokenOneSignal");
 const fs = require("fs");
 const path = require("path");
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const { makeRandom } = require("../utils/format-text");
 const { countTimes, formatTimeUpload } = require("../utils/format-date");
-const { SendNotification, SendNotificationToDevice } = require("../utils/send-notification");
+const {
+  SendNotification,
+  SendNotificationToDevice,
+} = require("../utils/send-notification");
 const { $where } = require("../models/User");
 const { default: mongoose } = require("mongoose");
 var response = require("../models/ResponseModel").response;
@@ -60,7 +63,6 @@ class PhotoController {
     const orOperatorFriend = _.map(listFriendsDb, (x) => ({
       user_id: x.requester_id,
     }));
-    console.log(orOperatorFriend);
 
     const listFriendPost = await Photo.find({ privacy: "friends" })
       .or(
@@ -81,15 +83,15 @@ class PhotoController {
     listPost = [...listFriendPost, ...listPost, ...listUserPost];
     listPost = _.reverse(_.sortBy(listPost, "uploadAt"));
 
-    console.log(listFriendPost);
     const listFriends = _.map(listFriendsDb, (x) => x.requester_id.toString());
-    console.log(listFriends);
+
     let listFriendsPhoto = [];
 
     if (!listPost || listPost.length < 1)
       return res.status(404).json(response(false, listPost));
 
     //check liked and Friend
+    console.log(listPost);
     listPost.forEach((x) => {
       const listLikeOfThisPost = _.map(x.list_likes, (item) => {
         return item.toString();
@@ -97,7 +99,7 @@ class PhotoController {
 
       //Check Friend
       const isFriend = _.includes(listFriends, x.user_id._id.toString());
-      console.log(x.user_id._id);
+
       x.isFriend = isFriend ? true : false;
       // Check Like
       const isLike = _.includes(listLikeOfThisPost, userId);
@@ -229,7 +231,7 @@ class PhotoController {
     const createdPhoto = await newPhoto.save();
     if (!createdPhoto) res.status(400).json(response(false));
     // onesignal
-    const findUserToken = await Token
+    const findUserToken = await Token;
     SendNotification("Test", "Test", (error, results) => {
       if (error) {
         console.log(err);
@@ -466,11 +468,15 @@ class PhotoController {
     let foundComments = await Comments.findOne({ post_id: postId })
       .lean()
       .populate("comments.user_id", "full_name avatar_path");
+    console.log(foundComments);
     if (!foundComments) {
-      const initComment = await Comments.create({
+      const initComment = new Comments({
         post_id: postId,
+        comments: [],
       });
-      return res.status(200).json({ status: true, data: initComment });
+      return res
+        .status(200)
+        .json({ status: true, data: await initComment.save() });
     }
     console.log(foundComments);
     foundComments.comments = _.map(foundComments.comments, (item) => {
