@@ -56,7 +56,7 @@ function isOver24Hours(doTime) {
 function formatMessageTime() {
   const now = new Date();
   const hours = now.getHours();
-  const minutes = now.getMinutes();
+  const minutes = now.getMinutes().toString().padStart(2, "0");
   const timeString = `${hours}:${minutes}`;
   return timeString;
 }
