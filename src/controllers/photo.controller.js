@@ -231,14 +231,16 @@ class PhotoController {
     const createdPhoto = await newPhoto.save();
     if (!createdPhoto) res.status(400).json(response(false));
     // onesignal
-    let listToken = await TokenOneSignal.find({
+    let listTokenUser = await TokenOneSignal.find({
       user: { $ne: new mongoose.Types.ObjectId(userId) },
     });
-    listToken = listToken.map((x) => x.token_signal);
-    console.log(listToken);
+    const listToken = listTokenUser.map((x) => x.token_signal);
+    const listUserId = _.uniq(listTokenUser.map((x) => x.user));
     SendNotificationToDevice(
       listToken,
       `${res.locals.userName} vừa đăng bài viết mới: ${caption}`,
+      listUserId,
+      res.locals.payload.id,
       (error, results) => {
         if (error) {
           console.log(err);
@@ -342,14 +344,16 @@ class PhotoController {
           },
           { new: true }
         );
-        let listToken = await TokenOneSignal.find({
+        let listTokenUser = await TokenOneSignal.find({
           user: { $ne: new mongoose.Types.ObjectId(userId) },
         });
-        listToken = listToken.map((x) => x.token_signal);
-        console.log(listToken);
+        const listToken = listTokenUser.map((x) => x.token_signal);
+        const listUserId = _.uniq(listTokenUser.map((x) => x.user));
         SendNotificationToDevice(
           listToken,
           `${res.locals.userName} vừa like ảnh của bạn`,
+          listUserId,
+          res.locals.payload.id,
           (error, results) => {
             if (error) {
               console.log(err);
@@ -375,14 +379,16 @@ class PhotoController {
           },
           { new: true }
         );
-        let listToken = await TokenOneSignal.find({
+        let listTokenUser = await TokenOneSignal.find({
           user: { $ne: new mongoose.Types.ObjectId(userId) },
         });
-        listToken = listToken.map((x) => x.token_signal);
-        console.log(listToken);
+        const listToken = listTokenUser.map((x) => x.token_signal);
+        const listUserId = _.uniq(listTokenUser.map((x) => x.user));
         SendNotificationToDevice(
           listToken,
           `${res.locals.userName} vừa like ảnh của bạn`,
+          listUserId,
+          res.locals.payload.id,
           (error, results) => {
             if (error) {
               console.log(err);
@@ -443,14 +449,16 @@ class PhotoController {
       const totalComments = await Photo.findByIdAndUpdate(postId, {
         $inc: { total_comment: 1 },
       });
-      let listToken = await TokenOneSignal.find({
+      let listTokenUser = await TokenOneSignal.find({
         user: { $ne: new mongoose.Types.ObjectId(userId) },
       });
-      listToken = listToken.map((x) => x.token_signal);
-      console.log(listToken);
+      const listToken = listTokenUser.map((x) => x.token_signal);
+      const listUserId = _.uniq(listTokenUser.map((x) => x.user));
       SendNotificationToDevice(
         listToken,
         `${res.locals.userName} vừa comment ảnh của bạn: ${comment}`,
+        listUserId,
+        res.locals.payload.id,
         (error, results) => {
           if (error) {
             console.log(err);
