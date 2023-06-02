@@ -49,6 +49,7 @@ app.post("/api/chat/get-list-chat", checkToken, async (req, res) => {
   return res.status(200).json({ status: true, data: result });
 });
 
+let roomId;
 app.post("/chat", checkToken, async (req, res) => {
   const userA = new mongoose.Types.ObjectId(res.locals.payload.id);
   const userB = new mongoose.Types.ObjectId(req.body.userB);
@@ -59,36 +60,36 @@ app.post("/chat", checkToken, async (req, res) => {
     foundRoom = await Chat.create({ content: "", user: [userA, userB] });
   }
 
-  const roomId = foundRoom._id.toString();
-  io.on("connection", (socket) => {
-    console.log("New user connected");
+  roomId = foundRoom._id.toString();
 
-    let userId;
-    socket.on("login", (data) => {
-      userId = data.userId;
-      console.log(userId);
-    });
-    // gui tin nhan di {socketId, senderId, message}
-
-    // nhan ve {senderId, message, isYourMessage}
-    socket.on(`${roomId}`, (data) => {
-      console.log(socket.id);
-      let isYourMessage = false;
-      const { socketId, ...other } = data;
-      if (socketId && socketId === socket.id) {
-        isYourMessage = true;
-      }
-      console.log(other);
-      io.emit(`${roomId}`, { ...other, isYourMessage });
-    });
-    // Xử lý sự kiện ngắt kết nối
-    socket.on("disconnect", () => {
-      console.log("User disconnected");
-    });
-  });
   return res.json({ roomId: roomId });
 });
+io.on("connection", (socket) => {
+  console.log("New user connected");
 
+  let userId;
+  socket.on("login", (data) => {
+    userId = data.userId;
+    console.log(userId);
+  });
+  // gui tin nhan di {socketId, senderId, message}
+
+  // nhan ve {senderId, message, isYourMessage}
+  socket.on(`${roomId}`, (data) => {
+    console.log(socket.id);
+    let isYourMessage = false;
+    const { socketId, ...other } = data;
+    if (socketId && socketId === socket.id) {
+      isYourMessage = true;
+    }
+    console.log(other);
+    io.emit(`${roomId}`, { ...other, isYourMessage });
+  });
+  // Xử lý sự kiện ngắt kết nối
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
+  });
+});
 //multer config
 upload;
 initRouter(app);
