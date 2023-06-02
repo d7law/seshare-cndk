@@ -59,6 +59,7 @@ app.post("/chat", checkToken, async (req, res) => {
     foundRoom = await Chat.create({ content: "", user: [userA, userB] });
   }
 
+  const roomId = foundRoom._id.toString();
   io.on("connection", (socket) => {
     console.log("New user connected");
 
@@ -69,7 +70,6 @@ app.post("/chat", checkToken, async (req, res) => {
     });
     // gui tin nhan di {socketId, senderId, message}
 
-    const roomId = foundRoom._id.toString();
     // nhan ve {senderId, message, isYourMessage}
     socket.on(`${roomId}`, (data) => {
       console.log(socket.id);
