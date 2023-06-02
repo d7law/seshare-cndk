@@ -91,7 +91,7 @@ app.post("/chat", checkToken, async (req, res) => {
 
   let roomId = foundRoom._id.toString();
   const listTokenUser = await TokenOneSignal.find({
-    user: new mongoose.Types.ObjectId(data.userB),
+    user: new mongoose.Types.ObjectId(userB),
   });
   const listToken = listTokenUser.map((x) => x.token_signal);
   const listUserId = _.uniq(listTokenUser.map((x) => x.user));
