@@ -36,8 +36,6 @@ const io = socketIO(server);
 // Handle chat
 io.on("connection", (socket) => {
   console.log("New user connected");
-
-  console.log(roomId);
   let userId;
   socket.on("login", (data) => {
     userId = data.userId;
@@ -76,11 +74,12 @@ app.post("/api/chat/get-list-chat", checkToken, async (req, res) => {
 });
 
 app.post("/chat", checkToken, async (req, res) => {
+  debugger;
   const userA = new mongoose.Types.ObjectId(res.locals.payload.id);
   const userB = new mongoose.Types.ObjectId(req.body.userB);
 
   // Find Room
-  let foundRoom = await Chat.findOne({ user: { $in: [userA, userB] } });
+  let foundRoom = await Chat.findOne({ user: { $all: [userA, userB] } });
   if (!foundRoom) {
     foundRoom = await Chat.create({ content: "", user: [userA, userB] });
   }
