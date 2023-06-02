@@ -52,9 +52,18 @@ function isOver24Hours(doTime) {
   }
   return false;
 }
+
+function formatMessageTime() {
+  const now = new Date();
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+  const timeString = `${hours}:${minutes}`;
+  return timeString;
+}
 module.exports = {
   formatToDate,
   countTimes,
   formatTimeUpload,
   isOver24Hours,
+  formatMessageTime,
 };

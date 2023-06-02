@@ -16,6 +16,7 @@ require("dotenv").config();
 const Chat = require("./models/Chat");
 const { checkToken } = require("./middleware/checkToken");
 const { default: mongoose } = require("mongoose");
+const { formatMessageTime } = require("./utils/format-date");
 
 db();
 
@@ -47,8 +48,8 @@ io.on("connection", (socket) => {
   // nhan ve {senderId, message, isYourMessage}
   socket.on("seshare chat", (data) => {
     const { ...message } = data;
-
-    io.emit("seshare chat", { ...message });
+    const timeSend = formatMessageTime();
+    io.emit("seshare chat", { ...message, timeSend: timeSend });
   });
   // Xử lý sự kiện ngắt kết nối
   socket.on("disconnect", () => {
