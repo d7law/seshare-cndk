@@ -1,11 +1,13 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const listStoriesSchema = new Schema({
-  own_user: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-  }],
+const notiSchema = new Schema({
+  own_user: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   content: {
     type: String,
     default: "",
@@ -16,6 +18,6 @@ const listStoriesSchema = new Schema({
   },
 });
 
-const Model = mongoose.model("ListStories", listStoriesSchema);
+const Model = mongoose.model("Notification", notiSchema);
 Model.createCollection();
 module.exports = Model;
