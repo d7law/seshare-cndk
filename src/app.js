@@ -21,7 +21,7 @@ const { formatMessageTime } = require("./utils/format-date");
 const {
   SendNotification,
   SendNotificationToDevice,
-} = require("../utils/send-notification");
+} = require("./utils/send-notification");
 
 db();
 
