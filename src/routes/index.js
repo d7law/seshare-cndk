@@ -9,6 +9,7 @@ const resize = require("../utils/resize");
 const path = require("path");
 const storyRoute = require("./story.route");
 const filterController = require("../controllers/filter.controller");
+const notificationController = require("../controllers/noti.controller");
 const TokenOneSignal = require("../models/TokenOneSignal");
 
 function initRouter(app) {
@@ -94,6 +95,7 @@ function initRouter(app) {
       return res.json({ status: false });
     }
   });
+  app.post("/api/notification", notificationController.getUserNoti);
 }
 
 module.exports = initRouter;
