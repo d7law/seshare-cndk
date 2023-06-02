@@ -77,6 +77,7 @@ io.on("connection", (socket) => {
 
   // nhan ve {senderId, message, isYourMessage}
   socket.on("seshare chat", (data) => {
+    const { ...message } = data;
     // console.log(socket.id);
     // console.log
     // let isYourMessage = false;
@@ -86,7 +87,7 @@ io.on("connection", (socket) => {
     // }
     // console.log(other);
     // io.emit("seshare chat", { ...other, isYourMessage });
-    io.emit("seshare chat", data);
+    io.emit("seshare chat", { ...message });
   });
   // Xử lý sự kiện ngắt kết nối
   socket.on("disconnect", () => {
