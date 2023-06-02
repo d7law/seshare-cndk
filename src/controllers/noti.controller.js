@@ -23,7 +23,8 @@ class NotiController {
       own_user: { $in: new mongoose.Types.ObjectId(res.locals.payload.id) },
     })
       .lean()
-      .populate("own_user", "avatar_path full_name");
+      .populate("own_user", "avatar_path full_name")
+      .populate("who_user", "avatar_path full_name");
 
     return res.status(200).json(response(true, listNoti));
   };
