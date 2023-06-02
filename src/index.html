@@ -22,7 +22,7 @@
     const socket = io();
 
     // Xử lý sự kiện nhận tin nhắn
-    socket.on('chat message', (msg) => {
+    socket.on('seshare chat', (msg) => {
       const li = document.createElement('li');
       const p = document.createElement('p');
       li.textContent = msg.content;
@@ -47,7 +47,7 @@
       const message = input.value.trim();
       console.log(message)
       if (message !== '') {
-        socket.emit('chat message', { socketId: socketId, content: message, userId: 'user',  });
+        socket.emit('seshare chat', { socketId: socketId, content: message, userId: 'user', });
         input.value = '';
       }
     });

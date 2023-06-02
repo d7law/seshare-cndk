@@ -33,7 +33,32 @@ const server = http.createServer(app);
 const io = socketIO(server);
 
 // Handle chat
+io.on("connection", (socket) => {
+  console.log("New user connected");
 
+  console.log(roomId);
+  let userId;
+  socket.on("login", (data) => {
+    userId = data.userId;
+    console.log(userId);
+  });
+  // gui tin nhan di {socketId, senderId, message}
+
+  // nhan ve {senderId, message, isYourMessage}
+  socket.on("seshare chat", (data) => {
+    const { ...message } = data;
+
+    io.emit("seshare chat", { ...message });
+  });
+  // Xử lý sự kiện ngắt kết nối
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
+  });
+});
+
+app.get("/", (req, res) => {
+  return res.sendFile(__dirname + "/index.html");
+});
 app.post("/api/chat/get-list-chat", checkToken, async (req, res) => {
   const userId = new mongoose.Types.ObjectId(res.locals.payload.id);
   const listRoom = await Chat.find({ user: { $in: [userId] } })
@@ -64,36 +89,7 @@ app.post("/chat", checkToken, async (req, res) => {
 
   return res.json({ roomId: roomId });
 });
-io.on("connection", (socket) => {
-  console.log("New user connected");
 
-  console.log(roomId);
-  let userId;
-  socket.on("login", (data) => {
-    userId = data.userId;
-    console.log(userId);
-  });
-  // gui tin nhan di {socketId, senderId, message}
-
-  // nhan ve {senderId, message, isYourMessage}
-  socket.on("seshare chat", (data) => {
-    const { ...message } = data;
-    // console.log(socket.id);
-    // console.log
-    // let isYourMessage = false;
-    // const { socketId, ...other } = data;
-    // if (socketId && socketId === socket.id) {
-    //   isYourMessage = true;
-    // }
-    // console.log(other);
-    // io.emit("seshare chat", { ...other, isYourMessage });
-    io.emit("seshare chat", { ...message });
-  });
-  // Xử lý sự kiện ngắt kết nối
-  socket.on("disconnect", () => {
-    console.log("User disconnected");
-  });
-});
 //multer config
 upload;
 initRouter(app);
