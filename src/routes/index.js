@@ -9,6 +9,7 @@ const resize = require("../utils/resize");
 const path = require("path");
 const storyRoute = require("./story.route");
 const filterController = require("../controllers/filter.controller");
+const TokenOneSignal = require("../models/TokenOneSignal");
 
 function initRouter(app) {
   /*
@@ -23,6 +24,7 @@ function initRouter(app) {
   /*
    ** EXTERNAL API
    */
+
   app.get("/video/:path", (req, res) => {
     return res.sendFile(path.join(__dirname, "..", "uploads", req.params.path));
   });
@@ -75,6 +77,23 @@ function initRouter(app) {
   app.use("/api", friendRoute);
   app.use("/api", photoRoute);
   app.use("/api", storyRoute);
+  // get One signal token:
+  app.post("/api/token-signal", async (req, res) => {
+    const { tokenSignal } = req.body;
+    const userId = res.locals.payload.id;
+
+    try {
+      await TokenOneSignal.create({
+        user: userId,
+        token_signal: tokenSignal,
+      });
+
+      return res.json({ status: true });
+    } catch (error) {
+      console.log(error);
+      return res.json({ status: false });
+    }
+  });
 }
 
 module.exports = initRouter;

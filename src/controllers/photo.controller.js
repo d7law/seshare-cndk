@@ -2,13 +2,14 @@ const Photo = require("../models/Photo");
 const LikePostOfUser = require("../models/LikePostOfUser");
 const Comments = require("../models/Comment");
 const Friend = require("../models/Friend");
+const TokenOneSignal = require
 const fs = require("fs");
 const path = require("path");
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const { makeRandom } = require("../utils/format-text");
 const { countTimes, formatTimeUpload } = require("../utils/format-date");
-const { SendNotification } = require("../utils/send-notification");
+const { SendNotification, SendNotificationToDevice } = require("../utils/send-notification");
 const { $where } = require("../models/User");
 const { default: mongoose } = require("mongoose");
 var response = require("../models/ResponseModel").response;
@@ -228,6 +229,7 @@ class PhotoController {
     const createdPhoto = await newPhoto.save();
     if (!createdPhoto) res.status(400).json(response(false));
     // onesignal
+    const findUserToken = await Token
     SendNotification("Test", "Test", (error, results) => {
       if (error) {
         console.log(err);

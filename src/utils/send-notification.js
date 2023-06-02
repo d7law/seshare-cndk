@@ -51,7 +51,7 @@ async function SendNotificationToDevice(player_ids, data, username, callback) {
     content_available: true,
     small_icon: "ic_notification_icon",
     data: {
-      PushTitle: "Thuc hanh Lab Flutter",
+      PushTitle: "Thông báo từ SeShare",
     },
   };
   let headers = {
