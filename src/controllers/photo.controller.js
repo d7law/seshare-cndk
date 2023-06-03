@@ -540,7 +540,14 @@ class PhotoController {
           .status(200)
           .json({ status: true, data: await initComment.save() });
       } catch (error) {
-        return res.status(200).json({ status: true, data: [] });
+        return res.status(200).json({
+          status: true,
+          data: {
+            _id: "NULLID",
+            post_id: postId,
+            comments: [],
+          },
+        });
       }
     }
     console.log(foundComments);
