@@ -16,6 +16,7 @@ const {
 const { $where } = require("../models/User");
 const { default: mongoose } = require("mongoose");
 var response = require("../models/ResponseModel").response;
+const _ = require("lodash");
 
 class NotiController {
   getUserNoti = async (req, res) => {
@@ -26,7 +27,8 @@ class NotiController {
       .populate("own_user", "avatar_path full_name")
       .populate("who_user", "avatar_path full_name");
 
-    return res.status(200).json(response(true, listNoti));
+    const result = _.reverse(listNoti);
+    return res.status(200).json(response(true, result));
   };
 }
 
