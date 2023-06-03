@@ -8,6 +8,10 @@ const commentSchema = new Schema({
   },
   comments: [
     {
+      _id: {
+        type: new mongoose.Schema.Types.ObjectId(),
+        unique: true,
+      },
       user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

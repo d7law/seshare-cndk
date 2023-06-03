@@ -426,8 +426,12 @@ class PhotoController {
     if (!foundPost) {
       foundPost = await Comments.create({
         post_id: postId,
-        comments: [],
+        comments: {
+          userId: new mongoose.Types.ObjectId(userId),
+          comment: comment,
+        },
       });
+      return res.status(200).json(repsonse(true, foundPost));
     }
 
     try {
