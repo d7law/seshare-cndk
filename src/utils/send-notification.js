@@ -1,6 +1,8 @@
 const { default: mongoose } = require("mongoose");
 const { ONE_SIGNAL_CONFIG } = require("../config/one-signal");
 const Notification = require("../models/Notification");
+const _ = require("lodash");
+
 async function SendNotification(data, user, whoUser, callback) {
   let inputMessage = {
     app_id: ONE_SIGNAL_CONFIG.APP_ID,
@@ -49,12 +51,13 @@ async function SendNotificationToDevice(
   whoUser,
   callback
 ) {
+  const player_ids_2 = _.uniq(player_ids);
   let inputMessage = {
     app_id: ONE_SIGNAL_CONFIG.APP_ID,
     contents: {
       en: `${data}`,
     },
-    include_player_ids: player_ids,
+    include_player_ids: player_ids_2,
     content_available: true,
     small_icon: "ic_notification_icon",
     data: {
