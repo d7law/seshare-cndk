@@ -106,11 +106,16 @@ class FriendController {
       let listToken = await TokenOneSignal.find({
         user: new mongoose.Types.ObjectId(data.userB),
       });
+
+      const userA2 = await User.findById(data.userA);
+      const userB2 = await User.findById(data.userB);
       listToken = listToken.map((x) => x.token_signal);
       console.log(listToken);
       SendNotificationToDevice(
         listToken,
         `${res.locals.userName} vừa gửi lời mời kết bạn`,
+        [userB2._id],
+        userA2._id,
         (error, results) => {
           if (error) {
             console.log(err);
@@ -140,6 +145,8 @@ class FriendController {
         { recipient_id: data.userA, requester_id: data.userB },
         { $set: { status: 3 } }
       );
+      const userA2 = await User.findById(data.userA);
+      const userB2 = await User.findById(data.userB);
       let listToken = await TokenOneSignal.find({
         user: new mongoose.Types.ObjectId(data.userB),
       });
@@ -147,7 +154,9 @@ class FriendController {
       console.log(listToken);
       SendNotificationToDevice(
         listToken,
-        `${res.locals.userName} đã châp nhận lời mời kết bạn`,
+        `${data.userB} đã châp nhận lời mời kết bạn`,
+        [userA2._id],
+        userB2._id,
         (error, results) => {
           if (error) {
             console.log(err);
