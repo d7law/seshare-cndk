@@ -25,8 +25,11 @@ class NotiController {
       .lean()
       .populate("own_user", "avatar_path full_name")
       .populate("who_user", "avatar_path full_name");
-
-    const result = _.reverse(listNoti);
+    const values = listNoti.map((x) => ({
+      ...x,
+      upload_time: formatTimeUpload(x.updatedAt),
+    }));
+    const result = _.reverse(values);
     return res.status(200).json(response(true, result));
   };
 }

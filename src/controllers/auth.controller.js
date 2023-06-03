@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Photo = require("../models/Photo");
+const Noti = require("../models/Notification");
 const Story = require("../models/Story");
 const Friend = require("../models/Friend");
 const _ = require("lodash");
@@ -277,10 +278,10 @@ class AuthController {
   };
   //[POST] update field
   updateField = async (req, res) => {
-    const photos = await Photo.find({});
+    const photos = await Noti.find({});
     const result = photos.forEach(async (x) => {
-      x.hidden_cmt = false;
-      x.hidden_like = false;
+      x.createdAt = new Date();
+      // x.updatedAt = new Date();
       await x.save();
       //await Photo.updateOne({ _id: x._id }, { $set: { list_likes: [] } });
     });
