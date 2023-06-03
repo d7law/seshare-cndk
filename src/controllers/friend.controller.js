@@ -154,7 +154,7 @@ class FriendController {
       console.log(listToken);
       SendNotificationToDevice(
         listToken,
-        `${userB2.full_name} đã châp nhận lời mời kết bạn`,
+        `${userA2.full_name} đã châp nhận lời mời kết bạn`,
         [userA2._id],
         userB2._id,
         (error, results) => {
