@@ -16,7 +16,6 @@ const {
 const { $where } = require("../models/User");
 const { default: mongoose } = require("mongoose");
 var response = require("../models/ResponseModel").response;
-const _ = require("lodash");
 
 class NotiController {
   getUserNoti = async (req, res) => {
