@@ -531,13 +531,17 @@ class PhotoController {
       .populate("comments.user_id", "full_name avatar_path");
     console.log(foundComments);
     if (!foundComments) {
-      const initComment = new Comments({
-        post_id: postId,
-        comments: [],
-      });
-      return res
-        .status(200)
-        .json({ status: true, data: await initComment.save() });
+      try {
+        const initComment = new Comments({
+          post_id: postId,
+          comments: [],
+        });
+        return res
+          .status(200)
+          .json({ status: true, data: await initComment.save() });
+      } catch (error) {
+        return res.status(200).json({ status: true, data: [] });
+      }
     }
     console.log(foundComments);
     foundComments.comments = _.map(foundComments.comments, (item) => {
